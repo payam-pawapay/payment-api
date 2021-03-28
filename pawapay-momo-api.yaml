@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: pawaPay Mobile Money API
+  title: pawaPay Mobile Money API xyz
   description: API that businesses can use to integrate with the pawaPay core system
     to receive and send mobile money payments in Africa
   contact:
