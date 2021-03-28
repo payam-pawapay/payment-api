@@ -4,14 +4,24 @@ info:
   title: "pawaPay Mobile Money API"
   description: "
     pawaPay Mobile Money API allows you to send and receive mobile money payments in several African countries. 
+    
     # Introduction
     
     This is the introduction.
     
     # Authentication
+    
     This is Authentication
     
     # Getting Started
+    
+    ## Important section 
+    
+    Some text
+    
+    # Sub Section 
+    
+    Some other text
     "
 
   contact:
