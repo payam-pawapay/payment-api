@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: pawaPay Mobile Money API xyz
+  title: pawaPay Mobile Money API
   description: API that businesses can use to integrate with the pawaPay core system
     to receive and send mobile money payments in Africa
   contact:
@@ -11,8 +11,7 @@ info:
     url: https://www.pawapay.co.uk/s/pawapay_api_logo
     altText: pawaPay logo
 servers:
-- url: https://virtserver.swaggerhub.com/pawapay/customer-api/v1
-  description: SwaggerHub API Auto Mocking
+- url: /
 tags:
 - name: payouts
   description: Payout (money out / disbursement) operations
@@ -814,6 +813,8 @@ components:
       description: The ISO 3166-1 alpha-3, three character country code in upper case
         (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3#Officially_assigned_code_elements)
       example: ZMB
+      xml:
+        name: Country
     Currency:
       type: string
       description: The ISO 4217 three character currency code in upper case (https://en.wikipedia.org/wiki/ISO_4217#Active_codes)
