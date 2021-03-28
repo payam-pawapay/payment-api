@@ -2,7 +2,18 @@ openapi: "3.0.0"
 # Last Edit 28.03.21
 info:
   title: "pawaPay Mobile Money API"
-  description: "API that businesses can use to integrate with the pawaPay core system to receive and send mobile money payments in Africa"
+  description: "
+    pawaPay Mobile Money API allows you to send and receive mobile money payments in several African countries. 
+    # Introduction
+    
+    This is the introduction.
+    
+    # Authentication
+    This is Authentication
+    
+    # Getting Started
+    "
+
   contact:
     name: "pawaPay Support"
     email: "support@pawapay.co.uk"
@@ -784,8 +795,6 @@ components:
       description: "The ISO 3166-1 alpha-3, three character country code in upper\
         \ case (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3#Officially_assigned_code_elements)"
       example: "ZMB"
-      xml:
-        name: Country
     Currency:
       type: "string"
       description: "The ISO 4217 three character currency code in upper case (https://en.wikipedia.org/wiki/ISO_4217#Active_codes)"
