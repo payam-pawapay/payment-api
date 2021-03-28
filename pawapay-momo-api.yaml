@@ -1,0 +1,1365 @@
+openapi: 3.0.0
+info:
+  title: pawaPay Mobile Money API
+  description: API that businesses can use to integrate with the pawaPay core system
+    to receive and send mobile money payments in Africa
+  contact:
+    name: pawaPay Support
+    email: support@pawapay.co.uk
+  version: v1
+  x-logo:
+    url: https://www.pawapay.co.uk/s/pawapay_api_logo
+    altText: pawaPay logo
+servers:
+- url: https://virtserver.swaggerhub.com/pawapay/customer-api/v1
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: payouts
+  description: Payout (money out / disbursement) operations
+- name: deposits
+  description: Deposit (money in / collection) operations
+paths:
+  /payouts:
+    post:
+      tags:
+      - payouts
+      summary: Submit a payout transaction identified by a unique payoutId for asynchronous
+        processing.
+      description: "This API call is <em>idempotent</em>. That is, it is safe to sumbit\
+        \ a <code>PayoutCreationRequest</code> with the same <code>payoutId</code>\
+        \ multiple times: duplicates are ignored with the corresponding <code>PayoutCreationStatus</code>.\
+        \ \n\n<b>NB!</b> Since the request can be rejected, an API user must check\
+        \ HTTP status code and <code>PayoutCreationResponse</code>."
+      operationId: createPayout
+      requestBody:
+        $ref: '#/components/requestBodies/PayoutCreationRequest'
+      responses:
+        "200":
+          description: "If a <code>PayoutCreationRequest</code> has been processed\
+            \ (but not necessarily accepted) by pawaPay. \n\n<b>NB!</b> An API user\
+            \ must analyze <code>PayoutCreationStatus</code> to check whether payout\
+            \ request was <em>accepted</em>, <em>rejected</em> or <em>ignored</em>\
+            \ as a duplicate."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayoutCreationResponse'
+              examples:
+                Accepted response:
+                  value:
+                    payoutId: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+                    status: ACCEPTED
+                    created: 2020-10-19T11:17:01Z
+                Duplicate ingored response:
+                  value:
+                    payoutId: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+                    status: DUPLICATE_IGNORED
+                    created: 2020-10-19T11:17:01Z
+                Rejected response:
+                  value:
+                    payoutId: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+                    status: REJECTED
+                    rejectionReason:
+                      rejectionCode: AMOUNT_TOO_LARGE
+                      rejectionMessage: Amount should not be greater than 1000
+        "400":
+          description: If a <code>PayoutCreationRequest</code> has been rejected due
+            to incompatibility with pawaPay API specification.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Missing mandatory field:
+                  value:
+                    errorId: 4f0d5e13-7e88-4cc6-827c-8c0640dc2cd3
+                    errorCode: 1
+                    errorMessage: 'Invalid input: Missing required creator property
+                      ''amount'''
+        "401":
+          description: If authentication has failed. Please make sure that valid authentication
+            token is provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failed authentication:
+                  value:
+                    errorId: cad1529e-040b-4c9d-a21d-2ba3056ff750
+                    errorCode: 2
+                    errorMessage: Authentication error
+        "403":
+          description: If authentication was successful, but authorization has failed.
+            Please make sure that valid authentication token is provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failed authorization:
+                  value:
+                    errorId: daa495f0-541d-4192-b636-a8877b25a510
+                    errorCode: 3
+                    errorMessage: Authorization error
+        "500":
+          description: "If a system error has occured. \n\n<b>NB!</b> Strictly speaking,\
+            \ payout transaction status is undetermined at this point and therefore\
+            \ an API user must either check payout status or try to submit <code>PayoutCreationRequest</code>\
+            \ with the same <code>payoutId</code> again."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                System error:
+                  value:
+                    errorId: d428a89e-fa8b-42b8-ba20-68be20d50af1
+                    errorCode: 0
+                    errorMessage: Internal error
+  /payouts/bulk:
+    post:
+      tags:
+      - payouts
+      summary: Batch operation which can be used to submit multiple payout transactions
+        for asynchronous processing. NB! Bulk requests with more than 100 PayoutCreationRequest-s
+        can be rejected by pawaPay.
+      description: "This API call is <em>idempotent</em>. That is, it is safe to sumbit\
+        \ a <code>BulkPayoutCreationRequest</code>  with the same <code>payoutId</code>\
+        \ multiple times: duplicates are ignored with the corresponding <code>PayoutCreationStatus</code>.\
+        \ \n\n<b>NB!</b> Since the request can be partially of fully rejected, an\
+        \ API user must check HTTP status code and analyze <code>PayoutCreationResponse</code>\
+        \ for each submitted <code>PayoutCreationRequest</code>."
+      operationId: createPayouts
+      requestBody:
+        $ref: '#/components/requestBodies/BulkPayoutCreationRequest'
+      responses:
+        "200":
+          description: "If a bulk request has been processed (but not necessarily\
+            \ accepted) by pawaPay. \n\n<b>NB!</b> An API user must analyze <code>PayoutCreationStatus</code>\
+            \ for each submitted <code>PayoutCreationRequest</code> (<code>payoutId</code>)\
+            \ separately."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PayoutCreationResponse'
+              examples:
+                Mixed response:
+                  value:
+                  - payoutId: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+                    status: ACCEPTED
+                    created: 2020-10-19T11:17:01Z
+                  - payoutId: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+                    status: DUPLICATE_IGNORED
+                    created: 2020-10-19T10:22:49Z
+                  - payoutId: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+                    status: REJECTED
+                    rejectionReason:
+                      rejectionCode: AMOUNT_TOO_LARGE
+                      ejectionMessage: Amount should not be greater than 1000
+        "400":
+          description: If a <code>BulkPayoutCreationRequest</code> has been rejected
+            due to incompatibility with pawaPay API specification.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Missing mandatory field:
+                  value:
+                    errorId: 4f0d5e13-7e88-4cc6-827c-8c0640dc2cd3
+                    errorCode: 1
+                    errorMessage: 'Invalid input: Missing required creator property
+                      ''amount'''
+        "401":
+          description: If authentication has failed. Please make sure that valid authentication
+            token is provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failed authentication:
+                  value:
+                    errorId: cad1529e-040b-4c9d-a21d-2ba3056ff750
+                    errorCode: 2
+                    errorMessage: Authentication error
+        "403":
+          description: If authentication was successful, but authorization has failed.
+            Please make sure that valid authentication token is provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failed authorization:
+                  value:
+                    errorId: daa495f0-541d-4192-b636-a8877b25a510
+                    errorCode: 3
+                    errorMessage: Authorization error
+        "500":
+          description: "If a system error has occured. \n\n<b>NB!</b> Strictly speaking,\
+            \ statuses of submitted payout transactions are undetermined at this point\
+            \ and therefore an API user must either check their statuses or try to\
+            \ submit them with the same <code>payoutId</code>-s again."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                System error:
+                  value:
+                    errorId: d428a89e-fa8b-42b8-ba20-68be20d50af1
+                    errorCode: 0
+                    errorMessage: Internal error
+  /payouts/{payoutId}:
+    get:
+      tags:
+      - payouts
+      summary: Get payout transaction status and payout details by payoutId which
+        has been specified in PayoutCreationRequest.
+      description: A list with at most one <code>Payout</code> is returned.
+      operationId: getPayout
+      parameters:
+      - name: payoutId
+        in: path
+        description: <code>payoutId</code> which has been specified in PayoutCreationRequest.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 1
+          type: string
+      responses:
+        "200":
+          description: If a request has been processed by pawaPay successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayoutSearchResult'
+              examples:
+                Completed payout:
+                  value:
+                  - payoutId: 8917c345-4791-4285-a416-62f24b6982db
+                    status: COMPLETED
+                    amount: "123.45"
+                    currency: ZMW
+                    country: ZMB
+                    correspondent: MTN_MOMO_ZMB
+                    recipient:
+                      type: MSISDN
+                      address:
+                        value: "256780334452"
+                    customerTimestamp: 2020-10-19T08:17:00Z
+                    statementDescription: From ACME company
+                    created: 2020-10-19T08:17:01Z
+                    receivedByRecipient: 2020-10-19T08:17:02Z
+                    correspondentIds:
+                      SOME_CORRESPONDENT_ID: "12356789"
+                Accepted payout:
+                  value:
+                  - payoutId: 8917c345-4791-4285-a416-62f24b6982db
+                    status: ACCEPTED
+                    amount: "123.45"
+                    currency: ZMW
+                    country: ZMB
+                    correspondent: MTN_MOMO_ZMB
+                    recipient:
+                      type: MSISDN
+                      address:
+                        value: "256780334452"
+                    customerTimestamp: 2020-10-19T08:17:00Z
+                    statementDescription: From ACME company
+                    created: 2020-10-19T08:17:01Z
+                Pending payout:
+                  value:
+                  - payoutId: 8917c345-4791-4285-a416-62f24b6982db
+                    status: PENDING
+                    amount: "123.45"
+                    currency: ZMW
+                    country: ZMB
+                    correspondent: MTN_MOMO_ZMB
+                    recipient:
+                      type: MSISDN
+                      address:
+                        value: "256780334452"
+                    customerTimestamp: 2020-10-19T08:17:00Z
+                    statementDescription: From ACME company
+                    created: 2020-10-19T08:17:01Z
+                Submitted payout:
+                  value:
+                  - payoutId: 8917c345-4791-4285-a416-62f24b6982db
+                    status: SUBMITTED
+                    amount: "123.45"
+                    currency: ZMW
+                    country: ZMB
+                    correspondent: MTN_MOMO_ZMB
+                    recipient:
+                      type: MSISDN
+                      address:
+                        value: "256780334452"
+                    customerTimestamp: 2020-10-19T08:17:00Z
+                    statementDescription: From ACME company
+                    created: 2020-10-19T08:17:01Z
+                Failed payout:
+                  value:
+                  - payoutId: 8917c345-4791-4285-a416-62f24b6982db
+                    status: FAILED
+                    amount: "123.45"
+                    currency: ZMW
+                    country: ZMB
+                    correspondent: MTN_MOMO_ZMB
+                    recipient:
+                      type: MSISDN
+                      address:
+                        value: "256780334452"
+                    customerTimestamp: 2020-10-19T08:17:00Z
+                    statementDescription: From ACME company
+                    created: 2020-10-19T08:17:01Z
+                    failureReason:
+                      failureCode: RECIPIENT_NOT_FOUND
+                      failureMessage: Recipient not found
+                Payout not found:
+                  value: []
+        "400":
+          description: If a <code>BulkPayoutCreationRequest</code> has been rejected
+            due to incompatibility with pawaPay API specification.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Missing mandatory field:
+                  value:
+                    errorId: 4f0d5e13-7e88-4cc6-827c-8c0640dc2cd3
+                    errorCode: 1
+                    errorMessage: Invalid input
+        "401":
+          description: If authentication has failed. Please make sure that valid authentication
+            token is provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failed authentication:
+                  value:
+                    errorId: cad1529e-040b-4c9d-a21d-2ba3056ff750
+                    errorCode: 2
+                    errorMessage: Authentication error
+        "403":
+          description: If authentication was successful, but authorization has failed.
+            Please make sure that valid authentication token is provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failed authorization:
+                  value:
+                    errorId: daa495f0-541d-4192-b636-a8877b25a510
+                    errorCode: 3
+                    errorMessage: Authorization error
+        "500":
+          description: If a system error has occured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                System error:
+                  value:
+                    errorId: d428a89e-fa8b-42b8-ba20-68be20d50af1
+                    errorCode: 0
+                    errorMessage: Internal error
+  /payouts/subscribe:
+    post:
+      tags:
+      - payouts
+      summary: Subscribe to pawaPay payout status notification callback.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+        required: true
+      responses:
+        "200":
+          description: If webhook has been registered successfully.
+      callbacks:
+        payoutCallback:
+          '{$request.body#/callbackUrl}':
+            post:
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/Payout'
+                required: true
+              responses:
+                "200":
+                  description: OK
+  /deposits:
+    post:
+      tags:
+      - deposits
+      summary: Submit a deposit transaction identified by a unique depositId for asynchronous
+        processing (money collection from the payer).
+      description: "This API call is <em>idempotent</em>. That is, it is safe to sumbit\
+        \ a <code>DepositCreationRequest</code> with the same <code>depositId</code>\
+        \ multiple times: duplicates are ignored with the corresponding <code>DepositCreationStatus</code>.\
+        \ \n\n<b>NB!</b> Since the request can be rejected, an API user must check\
+        \ HTTP status code and <code>DepositCreationResponse</code>."
+      operationId: createDesposit
+      requestBody:
+        $ref: '#/components/requestBodies/DepositCreationRequest'
+      responses:
+        "200":
+          description: "If a <code>DepositCreationRequest</code> has been processed\
+            \ (but not necessarily accepted) by pawaPay. \n\n<b>NB!</b> An API user\
+            \ must analyze <code>DepositCreationStatus</code> to check whether payout\
+            \ request was <em>accepted</em>, <em>rejected</em> or <em>ignored</em>\
+            \ as a duplicate."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepositCreationResponse'
+              examples:
+                Accepted response:
+                  value:
+                    depositId: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+                    status: ACCEPTED
+                    created: 2020-10-19T11:17:01Z
+                Duplicate ingored response:
+                  value:
+                    depositId: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+                    status: DUPLICATE_IGNORED
+                    created: 2020-10-19T11:17:01Z
+                Rejected response:
+                  value:
+                    depositId: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+                    status: REJECTED
+                    rejectionReason:
+                      rejectionCode: AMOUNT_TOO_LARGE
+                      rejectionMessage: Amount should not be greater than 1000
+        "400":
+          description: If a <code>DepositCreationRequest</code> has been rejected
+            due to incompatibility with pawaPay API specification.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Missing mandatory field:
+                  value:
+                    errorId: 4f0d5e13-7e88-4cc6-827c-8c0640dc2cd3
+                    errorCode: 1
+                    errorMessage: 'Invalid input: Missing required creator property
+                      ''amount'''
+        "401":
+          description: If authentication has failed. Please make sure that valid authentication
+            token is provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failed authentication:
+                  value:
+                    errorId: cad1529e-040b-4c9d-a21d-2ba3056ff750
+                    errorCode: 2
+                    errorMessage: Authentication error
+        "403":
+          description: If authentication was successful, but authorization has failed.
+            Please make sure that valid authentication token is provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failed authorization:
+                  value:
+                    errorId: daa495f0-541d-4192-b636-a8877b25a510
+                    errorCode: 3
+                    errorMessage: Authorization error
+        "500":
+          description: "If a system error has occured. \n\n<b>NB!</b> Strictly speaking,\
+            \ deposit transaction status is undetermined at this point and therefore\
+            \ an API user must either check payout status or try to submit <code>DepositCreationRequest</code>\
+            \ with the same <code>depositId</code> again."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                System error:
+                  value:
+                    errorId: d428a89e-fa8b-42b8-ba20-68be20d50af1
+                    errorCode: 0
+                    errorMessage: Internal error
+  /deposits/bulk:
+    post:
+      tags:
+      - deposits
+      summary: Batch operation which can be used to submit multiple deposit transactions
+        for asynchronous processing. NB! Bulk requests with more than 100 DepositCreationRequest-s
+        can be rejected by pawaPay.
+      description: "This API call is <em>idempotent</em>. That is, it is safe to sumbit\
+        \ a <code>BulkDepositCreationRequest</code>  with the same <code>depositId</code>\
+        \ multiple times: duplicates are ignored with the corresponding <code>DepositeCreationStatus</code>.\
+        \ \n\n<b>NB!</b> Since the request can be partially of fully rejected, an\
+        \ API user must check HTTP status code and analyze <code>DepositCreationResponse</code>\
+        \ for each submitted <code>DepositCreationRequest</code>."
+      operationId: createDeposits
+      requestBody:
+        $ref: '#/components/requestBodies/BulkDepositCreationRequest'
+      responses:
+        "200":
+          description: "If a bulk request has been processed (but not necessarily\
+            \ accepted) by pawaPay. \n\n<b>NB!</b> An API user must analyze <code>DepositCreationStatus</code>\
+            \ for each submitted <code>DepositCreationRequest</code> (<code>depositId</code>)\
+            \ separately."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DepositCreationResponse'
+              examples:
+                Mixed response:
+                  value:
+                  - depositId: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+                    status: ACCEPTED
+                    created: 2020-10-19T11:17:01Z
+                  - depositId: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+                    status: DUPLICATE_IGNORED
+                    created: 2020-10-19T10:22:49Z
+                  - depositId: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+                    status: REJECTED
+                    rejectionReason:
+                      rejectionCode: AMOUNT_TOO_LARGE
+                      ejectionMessage: Amount should not be greater than 1000
+        "400":
+          description: If a <code>BulkDepositCreationRequest</code> has been rejected
+            due to incompatibility with pawaPay API specification.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Missing mandatory field:
+                  value:
+                    errorId: 4f0d5e13-7e88-4cc6-827c-8c0640dc2cd3
+                    errorCode: 1
+                    errorMessage: 'Invalid input: Missing required creator property
+                      ''amount'''
+        "401":
+          description: If authentication has failed. Please make sure that valid authentication
+            token is provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failed authentication:
+                  value:
+                    errorId: cad1529e-040b-4c9d-a21d-2ba3056ff750
+                    errorCode: 2
+                    errorMessage: Authentication error
+        "403":
+          description: If authentication was successful, but authorization has failed.
+            Please make sure that valid authentication token is provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failed authorization:
+                  value:
+                    errorId: daa495f0-541d-4192-b636-a8877b25a510
+                    errorCode: 3
+                    errorMessage: Authorization error
+        "500":
+          description: "If a system error has occured. \n\n<b>NB!</b> Strictly speaking,\
+            \ statuses of submitted deposit transactions are undetermined at this\
+            \ point and therefore an API user must either check their statuses or\
+            \ try to submit them with the same <code>depositId</code>-s again."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                System error:
+                  value:
+                    errorId: d428a89e-fa8b-42b8-ba20-68be20d50af1
+                    errorCode: 0
+                    errorMessage: Internal error
+  /deposits/{depositId}:
+    get:
+      tags:
+      - deposits
+      summary: Get deposit transaction status and deposit details by depositId which
+        has been specified in DepositCreationRequest.
+      operationId: getDeposit
+      parameters:
+      - name: depositId
+        in: path
+        description: <code>payoutId</code> which has been specified in DepositCreationRequest.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 1
+          type: string
+      responses:
+        "200":
+          description: If a request has been processed by pawaPay successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepositSearchResult'
+              examples:
+                Completed deposit:
+                  value:
+                  - depositId: 8917c345-4791-4285-a416-62f24b6982db
+                    status: COMPLETED
+                    requestedAmount: "123.45"
+                    depositedAmount: "123.45"
+                    currency: ZMW
+                    country: ZMB
+                    payer:
+                      type: MSISDN
+                      address:
+                        value: "256780334452"
+                    correspondent: MTN_MOMO_ZMB
+                    statementDescription: To ACME company
+                    customerTimestamp: 2020-10-19T08:17:00Z
+                    created: 2020-10-19T08:17:01Z
+                    respondedByPayer: 2020-10-19T08:17:02Z
+                    correspondentIds:
+                      SOME_CORRESPONDENT_ID: "12356789"
+                Completed suspicious deposit:
+                  value:
+                  - depositId: 8917c345-4791-4285-a416-62f24b6982db
+                    status: COMPLETED
+                    requestedAmount: "200.00"
+                    depositedAmount: "1.00"
+                    currency: ZMW
+                    country: ZMB
+                    payer:
+                      type: MSISDN
+                      address:
+                        value: "256780334452"
+                    correspondent: MTN_MOMO_ZMB
+                    statementDescription: To ACME company
+                    customerTimestamp: 2020-10-19T08:17:00Z
+                    created: 2020-10-19T08:17:01Z
+                    respondedByPayer: 2020-10-19T08:17:02Z
+                    correspondentIds:
+                      SOME_CORRESPONDENT_ID: "12356789"
+                    suspiciousActivityReport:
+                    - activityType: AMOUNT_DISCREPANCY
+                      comment: There is a discrepancy between requested and actual
+                        deposit amount has been detected.
+                Accepted deposit:
+                  value:
+                  - depositId: 8917c345-4791-4285-a416-62f24b6982db
+                    status: ACCEPTED
+                    requestedAmount: "123.45"
+                    currency: ZMW
+                    country: ZMB
+                    payer:
+                      type: MSISDN
+                      address:
+                        value: "256780334452"
+                    correspondent: MTN_MOMO_ZMB
+                    statementDescription: To ACME company
+                    customerTimestamp: 2020-10-19T08:17:00Z
+                    created: 2020-10-19T08:17:01Z
+                Pending deposit:
+                  value:
+                  - depositId: 8917c345-4791-4285-a416-62f24b6982db
+                    status: PENDING
+                    requestedAmount: "123.45"
+                    currency: ZMW
+                    country: ZMB
+                    payer:
+                      type: MSISDN
+                      address:
+                        value: "256780334452"
+                    correspondent: MTN_MOMO_ZMB
+                    statementDescription: To ACME company
+                    customerTimestamp: 2020-10-19T08:17:00Z
+                    created: 2020-10-19T08:17:01Z
+                Submitted deposit:
+                  value:
+                  - depositId: 8917c345-4791-4285-a416-62f24b6982db
+                    status: SUBMITTED
+                    requestedAmount: "123.45"
+                    currency: ZMW
+                    country: ZMB
+                    payer:
+                      type: MSISDN
+                      address:
+                        value: "256780334452"
+                    correspondent: MTN_MOMO_ZMB
+                    statementDescription: To ACME company
+                    customerTimestamp: 2020-10-19T08:17:00Z
+                    created: 2020-10-19T08:17:01Z
+                Failed deposit:
+                  value:
+                  - depositId: 8917c345-4791-4285-a416-62f24b6982db
+                    status: FAILED
+                    requestedAmount: "123.45"
+                    currency: ZMW
+                    country: ZMB
+                    payer:
+                      type: MSISDN
+                      address:
+                        value: "256780334452"
+                    correspondent: MTN_MOMO_ZMB
+                    statementDescription: From ACME company
+                    customerTimestamp: 2020-10-19T08:17:00Z
+                    created: 2020-10-19T08:17:01Z
+                    failureReason:
+                      failureCode: PAYMENT_NOT_APPROVED
+                      failureMessage: Payment not approved
+                Deposit not found:
+                  value: []
+        "500":
+          description: If a system error has occured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                System error:
+                  value:
+                    errorId: d428a89e-fa8b-42b8-ba20-68be20d50af1
+                    errorCode: 0
+                    errorMessage: Internal error
+  /deposits/subscribe:
+    post:
+      tags:
+      - deposits
+      summary: Subscribe to pawaPay deposit status notification callback.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_1'
+        required: true
+      responses:
+        "200":
+          description: If webhook has been registered successfully.
+      callbacks:
+        depositCallback:
+          '{$request.body#/callbackUrl}':
+            post:
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/Deposit'
+                required: true
+              responses:
+                "200":
+                  description: OK
+components:
+  schemas:
+    AddressValue:
+      required:
+      - value
+      type: object
+      properties:
+        value:
+          type: string
+          description: |
+            The value of the financial address, based on address type. In case of MSISDN, the format is (https://en.wikipedia.org/wiki/MSISDN). <p>MSISDN validation has following rules:
+             1. Only digits without whitespaces or any other separators or prefixes like '+'.
+             2. Should not start with zero.
+             3. Country code is mandatory.
+             4. Should not exceed or less than the valid length of specified country.
+             <p>Permitted samples for country code GHA:<br> 233558708954, 233558708955<br> <p>Not permitted samples for country code GHA:<br> +233558708954, 233 558 708954, 233-558-708954, 0233558708954, 233558708, 233558708954872, 999558708954, 37255870895
+          example: "256780334452"
+    Amount:
+      maxLength: 23
+      minLength: 1
+      pattern: ^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$
+      type: string
+      description: |
+        Amount validation has following rules:
+        1. Between zero and four decimal places can be supplied.
+        2. A maximum of 18 integer places are allowed.
+        3. Leading zeroes are not permitted except where the value is less than 1. For any value less than one, one and only one leading zero must be supplied.
+        4. Trailing zeroes are permitted.
+        5. Only values greater than ZERO are permitted.
+        6. Maximum value that can be supplied is 999999999999999999.9999
+        <p>Permitted samples:<br>
+        5, 5.0, 5.00, 5.5, 5.50, 5.5555, 555555555555555555, 0.5
+        <p>
+        Not permitted samples:<br>
+        5., 5.55555, 5555555555555555555, .5, -5.5, 00.5, 00.00, 00001.32
+      example: "15.21"
+    Correspondent:
+      type: string
+      description: The name of the financial provider
+      example: MTN_MOMO_ZMB
+    Country:
+      type: string
+      description: The ISO 3166-1 alpha-3, three character country code in upper case
+        (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3#Officially_assigned_code_elements)
+      example: ZMB
+    Currency:
+      type: string
+      description: The ISO 4217 three character currency code in upper case (https://en.wikipedia.org/wiki/ISO_4217#Active_codes)
+      example: ZMW
+    Deposit:
+      required:
+      - correspondent
+      - country
+      - created
+      - currency
+      - customerTimestamp
+      - depositId
+      - payer
+      - requestedAmount
+      - status
+      type: object
+      properties:
+        depositId:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: The ID used for the deposit in the customers internal system.
+          example: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+        status:
+          $ref: '#/components/schemas/DepositStatus'
+        requestedAmount:
+          $ref: '#/components/schemas/Amount'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        country:
+          $ref: '#/components/schemas/Country'
+        correspondent:
+          $ref: '#/components/schemas/Correspondent'
+        payer:
+          $ref: '#/components/schemas/FinancialAddress'
+        customerTimestamp:
+          type: string
+          description: The customer’s timestamp for when they initiated the deposit
+            process. Format defined by 'date-time' in RFC3339 section 5.6 (https://tools.ietf.org/html/rfc3339#section-5.6)
+          format: date-time
+          example: 2020-02-21T17:32:28Z
+        statementDescription:
+          maxLength: 22
+          type: string
+          description: The message that will be sent to the recipient of this deposit.
+          example: Up to 22 chars note
+        created:
+          type: string
+          description: The timestamp of when the deposit was created in the pawaPay
+            system. Format defined by 'date-time' in RFC3339 section 5.6 (https://tools.ietf.org/html/rfc3339#section-5.6)
+          format: date-time
+          example: 2020-02-21T17:32:29Z
+        depositedAmount:
+          $ref: '#/components/schemas/Amount'
+        respondedByPayer:
+          type: string
+          description: When the deposit request was responded by the payer. Format
+            defined by 'date-time' in RFC3339 section 5.6 (https://tools.ietf.org/html/rfc3339#section-5.6)
+          format: date-time
+          example: 2020-02-21T17:32:30Z
+        correspondentIds:
+          type: object
+          additionalProperties:
+            type: string
+          description: The ID-s used by the correspondent
+          example:
+            MTN_INIT: ABC123
+            MTN_FINAL: DEF456
+        suspiciousActivityReport:
+          $ref: '#/components/schemas/SuspciousDepositTransactionReport'
+        failureReason:
+          $ref: '#/components/schemas/DepositFailureReason'
+    DepositCreationRequest:
+      required:
+      - amount
+      - correspondent
+      - country
+      - currency
+      - customerTimestamp
+      - depositId
+      - payer
+      type: object
+      properties:
+        depositId:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: A unique customer-side payout identifier. Only ASCII printable
+            characters are allowed.
+          example: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+        amount:
+          $ref: '#/components/schemas/Amount'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        country:
+          $ref: '#/components/schemas/Country'
+        correspondent:
+          $ref: '#/components/schemas/Correspondent'
+        payer:
+          $ref: '#/components/schemas/FinancialAddress'
+        customerTimestamp:
+          type: string
+          description: The customer’s timestamp for when they initiated the deposit
+            process. Used for end-to-end transparency. Format defined by 'date-time'
+            in RFC3339 section 5.6 (https://tools.ietf.org/html/rfc3339#section-5.6)
+          format: date-time
+          example: 2020-02-21T17:32:28Z
+        statementDescription:
+          maxLength: 22
+          type: string
+          description: The message that will be sent to the recipient of this deposit.
+          example: Up to 22 chars note
+    DepositCreationResponse:
+      required:
+      - depositId
+      - status
+      type: object
+      properties:
+        depositId:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: A unique deposit identifier provided by customer in DepositCreationRequest.
+          example: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+        status:
+          $ref: '#/components/schemas/DepositCreationStatus'
+        created:
+          type: string
+          description: The timestamp of when the deposit was created in the pawaPay
+            system. Format defined by 'date-time' in RFC3339 section 5.6 (https://tools.ietf.org/html/rfc3339#section-5.6)
+          format: date-time
+          example: 2020-02-21T17:32:29Z
+        rejectionReason:
+          $ref: '#/components/schemas/DepositRejectionReason'
+    DepositCreationStatus:
+      type: string
+      description: "Enumeration presenting the status of the `DepositCreationResponse`:\
+        \ \n* `ACCEPTED` - The deposit creation request has been accepted. \n* `REJECTED`\
+        \ - The deposit creation request has been rejected. See `DepositRejectionReason`\
+        \ for details \n* `DUPLICATE_IGNORED` - This deposit creation request is duplicated\
+        \ and will be ignored.\n"
+      enum:
+      - ACCEPTED
+      - REJECTED
+      - DUPLICATE_IGNORED
+    DepositFailureReason:
+      required:
+      - failureCode
+      type: object
+      properties:
+        failureCode:
+          type: string
+          description: "Enumeration presenting details in case of failure: \n* `PAYER_NOT_FOUND`\
+            \ - Payer not found. \n* `PAYMENT_NOT_APPROVED` - Payer did not approve\
+            \ the payment. \n* `PAYER_LIMIT_REACHED` - Payer has reached the limit.\
+            \ \n* `NOT_ENOUGH_FUNDS` - Payer does not have enough funds. \n* `OTHER_ERROR`\
+            \ - Any other error. Please refer to `failureMessage` and contact support.\n"
+          example: OTHER_ERROR
+          enum:
+          - PAYER_NOT_FOUND
+          - PAYMENT_NOT_APPROVED
+          - PAYER_LIMIT_REACHED
+          - NOT_ENOUGH_FUNDS
+          - OTHER_ERROR
+        failureMessage:
+          type: string
+          description: Additional optional failure message
+          example: Payer's address is blocked
+    DepositRejectionReason:
+      required:
+      - rejectionReason
+      type: object
+      properties:
+        rejectionCode:
+          type: string
+          description: "Enumeration presenting details in case of failure:\n* `INVALID_PAYER_FORMAT`\
+            \ - The payer address is invalid. \n* `INVALID_AMOUNT` - The specified\
+            \ amount is not supported. \n* `AMOUNT_TOO_SMALL` - The specified amount\
+            \ is below the accepted limit. \n* `AMOUNT_TOO_LARGE` - The specified\
+            \ amount is above the accepted limit. \n* `INVALID_CURRENCY` - The specified\
+            \ currency either does not exist or is not supported for this correspondent\
+            \ or payer. \n* `INVALID_COUNTRY` - The specified country either does\
+            \ not exist or is not supported for this correspondent or payer. \n* `PARAMETER_INVALID`\
+            \ - One or more parameters are invalid. \n* `RATE_LIMIT` - The number\
+            \ of allowed requests within a certain time period are exceeded. \n* `DEPOSITS_NOT_ALLOWED`\
+            \ - Deposits are not allowed for this customer, this correspondent or\
+            \ this payer.\n"
+          example: INVALID_AMOUNT
+          enum:
+          - INVALID_PAYER_FORMAT
+          - INVALID_AMOUNT
+          - AMOUNT_TOO_SMALL
+          - AMOUNT_TOO_LARGE
+          - INVALID_CURRENCY
+          - INVALID_COUNTRY
+          - PARAMETER_INVALID
+          - RATE_LIMIT
+          - DEPOSITS_NOT_ALLOWED
+        rejectionMessage:
+          type: string
+          description: Additional optional rejection message
+          example: You don't have access to this correspondent
+    DepositSearchResult:
+      type: array
+      items:
+        $ref: '#/components/schemas/Deposit'
+    DepositStatus:
+      type: string
+      description: "Enumeration presenting the status of the deposit: \n* `ACCEPTED`\
+        \ - The deposit request has been accepted and has not processed internally.\
+        \ \n* `PENDING` - The deposit request is not yet submitted to the correspondent.\
+        \ \n* `SUBMITTED` - The deposit request has been submitted to the correspondent,\
+        \ with no response yet. \n* `CANCELED` - Final state. The deposit request\
+        \ was canceled by the customer. \n* `FAILED` - Final state. The deposit request\
+        \ has failed. \n* `COMPLETED` - Final state. The deposit request has been\
+        \ successful.\n"
+      enum:
+      - ACCEPTED
+      - PENDING
+      - SUBMITTED
+      - CANCELED
+      - FAILED
+      - COMPLETED
+    SuspciousDepositTransactionReport:
+      type: array
+      items:
+        $ref: '#/components/schemas/SuspiciousDepositTransactionReportEntry'
+    SuspiciousDepositTransactionReportEntry:
+      required:
+      - activityType
+      - comment
+      type: object
+      properties:
+        activityType:
+          type: string
+          description: "Represents a suspicious activity category\n \n* <code>AMOUNT_DISCREPANCY</code>\
+            \ - Indicates that there is a discrepancy between requested and actual\
+            \ deposit amount has been detected."
+          example: AMOUNT_DISCREPANCY
+          enum:
+          - AMOUNT_DISCREPANCY
+        comment:
+          type: string
+          example: There is a discrepancy between requested and actual deposit amount
+            has been detected.
+    ErrorResponse:
+      required:
+      - errorCode
+      - errorId
+      - errorMessage
+      type: object
+      properties:
+        errorId:
+          maxLength: 36
+          type: string
+          description: A unique error ID in pawaPay system.
+          example: 63743264-7292-11ea-bc55-0242ac130003
+        errorCode:
+          type: integer
+          description: pawaPay internal error code.
+          example: 1
+        errorMessage:
+          type: string
+          description: Error message.
+          example: Internal error
+    FinancialAddress:
+      required:
+      - address
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of financial address.
+          example: MSISDN
+          enum:
+          - MSISDN
+        address:
+          $ref: '#/components/schemas/AddressValue'
+    Payout:
+      required:
+      - amount
+      - correspondent
+      - country
+      - created
+      - currency
+      - customerTimestamp
+      - payoutId
+      - recipient
+      - status
+      type: object
+      properties:
+        payoutId:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: A customer-side payout identifier which has been specified
+            in <code>PayoutCreationRequest</code>.
+          example: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+        status:
+          $ref: '#/components/schemas/PayoutStatus'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        country:
+          $ref: '#/components/schemas/Country'
+        correspondent:
+          $ref: '#/components/schemas/Correspondent'
+        recipient:
+          $ref: '#/components/schemas/FinancialAddress'
+        customerTimestamp:
+          type: string
+          description: A customer-side payout initiation timestamp. Format defined
+            by 'date-time' in RFC3339 section 5.6 (https://tools.ietf.org/html/rfc3339#section-5.6)
+          format: date-time
+          example: 2020-02-21T17:32:28Z
+        statementDescription:
+          maxLength: 22
+          type: string
+          description: The message that will be sent to the recipient of this payout.
+          example: Up to 22 chars note
+        created:
+          type: string
+          description: pawaPay-side payout initiation timestamp. Format defined by
+            'date-time' in RFC3339 section 5.6 (https://tools.ietf.org/html/rfc3339#section-5.6)
+          format: date-time
+          example: 2020-02-21T17:32:29Z
+        receivedByRecipient:
+          type: string
+          description: When the payment was received by the recipient. Format defined
+            by 'date-time' in RFC3339 section 5.6 (https://tools.ietf.org/html/rfc3339#section-5.6)
+          format: date-time
+          example: 2020-02-21T17:32:30Z
+        correspondentIds:
+          type: object
+          additionalProperties:
+            type: string
+          description: The ids used by the correspondent
+          example:
+            MTN_INIT: ABC123
+            MTN_FINAL: DEF456
+        failureReason:
+          $ref: '#/components/schemas/PayoutFailureReason'
+    PayoutCreationRequest:
+      required:
+      - amount
+      - correspondent
+      - country
+      - currency
+      - customerTimestamp
+      - payoutId
+      - recipient
+      type: object
+      properties:
+        payoutId:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: A unique customer-side payout identifier. Only ASCII printable
+            characters are allowed.
+          example: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+        amount:
+          $ref: '#/components/schemas/Amount'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        country:
+          $ref: '#/components/schemas/Country'
+        correspondent:
+          $ref: '#/components/schemas/Correspondent'
+        recipient:
+          $ref: '#/components/schemas/FinancialAddress'
+        customerTimestamp:
+          type: string
+          description: A customer-side payout initiation timestamp. Used for end-to-end
+            transparency. Format defined by 'date-time' in RFC3339 section 5.6 (https://tools.ietf.org/html/rfc3339#section-5.6)
+          format: date-time
+          example: 2020-02-21T17:32:28Z
+        statementDescription:
+          maxLength: 22
+          type: string
+          description: The message that will be sent to the recipient of this payout.
+          example: Up to 22 chars note
+    PayoutCreationResponse:
+      required:
+      - payoutId
+      - status
+      type: object
+      properties:
+        payoutId:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: A unique payout identifier provided by customer in PayoutCreationRequest.
+          example: f4401bd2-1568-4140-bf2d-eb77d2b2b639
+        status:
+          $ref: '#/components/schemas/PayoutCreationStatus'
+        created:
+          type: string
+          description: The timestamp of when the payout was created in the pawaPay
+            system. Format defined by 'date-time' in RFC3339 section 5.6 (https://tools.ietf.org/html/rfc3339#section-5.6)
+          format: date-time
+          example: 2020-02-21T17:32:29Z
+        rejectionReason:
+          $ref: '#/components/schemas/PayoutRejectionReason'
+    PayoutCreationStatus:
+      type: string
+      description: "Enumeration presenting the status of the `PayoutCreationResponse`:\
+        \ \n* `ACCEPTED` - The payout creation request has been accepted. \n* `REJECTED`\
+        \ - The payout creation request has been rejected. See `PayoutRejectionReason`\
+        \ for details. \n* `DUPLICATE_IGNORED` - The payout creation request has been\
+        \ ignored as a duplicate of already accepted payout creation request. Deduplication\
+        \ logic relies upon payoutId.\n"
+      enum:
+      - ACCEPTED
+      - REJECTED
+      - DUPLICATE_IGNORED
+    PayoutFailureReason:
+      required:
+      - failureCode
+      type: object
+      properties:
+        failureCode:
+          type: string
+          description: "Enumeration presenting details in case of failure: \n* `BALANCE_INSUFFICIENT`\
+            \ - The customer’s balance is insufficient to proceed with the payout.\
+            \ \n* `RECIPIENT_NOT_FOUND` - Recipient not found. \n* `RECIPIENT_NOT_ALLOWED_TO_RECEIVE`\
+            \ - Recipient cannot receive funds due to e.g. transfer limit. \n* `RECIPIENT_LIMIT_REACHED`\
+            \ - Recipient has reached the limit \n* `OTHER_ERROR` - Any other error.\
+            \ Please refer to `failureMessage` and contact support.\n"
+          example: OTHER_ERROR
+          enum:
+          - BALANCE_INSUFFICIENT
+          - RECIPIENT_NOT_FOUND
+          - RECIPIENT_NOT_ALLOWED_TO_RECEIVE
+          - RECIPIENT_LIMIT_REACHED
+          - OTHER_ERROR
+        failureMessage:
+          type: string
+          description: Additional optional failure message
+          example: Recipient's address is blocked
+    PayoutRejectionReason:
+      required:
+      - rejectionReason
+      type: object
+      properties:
+        rejectionCode:
+          type: string
+          description: "Enumeration presenting details in case of failure: \n* `BALANCE_INSUFFICIENT`\
+            \ - The customer’s balance is insufficient to proceed with the payout.\
+            \ \n* `INVALID_RECIPIENT_FORMAT` - The account number (MSISDN etc) specified\
+            \ is invalid. \n* `INVALID_AMOUNT`- The specified amount is not supported.\
+            \ \n* `AMOUNT_TOO_SMALL` - The specified amount is below the accepted\
+            \ limit. \n* `AMOUNT_TOO_LARGE` - The specified amount is above the accepted\
+            \ limit. \n* `INVALID_CURRENCY` - The specified currency either does not\
+            \ exist or is not supported for the target account. \n* `INVALID_COUNTRY`\
+            \ - The specified country either does not exist or is not supported for\
+            \ this correspondent. \n* `PARAMETER_INVALID` - One or more parameters\
+            \ are invalid. \n* `RATE_LIMIT` - The number of allowed requests within\
+            \ a certain time period are exceeded. \n* `PAYOUTS_NOT_ALLOWED` - Payouts\
+            \ are not allowed for this customer, this correspondent or this recipient.\n"
+          example: INVALID_AMOUNT
+          enum:
+          - BALANCE_INSUFFICIENT
+          - INVALID_RECIPIENT_FORMAT
+          - INVALID_AMOUNT
+          - AMOUNT_TOO_SMALL
+          - AMOUNT_TOO_LARGE
+          - INVALID_CURRENCY
+          - INVALID_COUNTRY
+          - PARAMETER_INVALID
+          - RATE_LIMIT
+          - PAYOUTS_NOT_ALLOWED
+        rejectionMessage:
+          type: string
+          description: Additional optional rejection message
+          example: You don't have access to this correspondent
+    PayoutSearchResult:
+      type: array
+      items:
+        $ref: '#/components/schemas/Payout'
+    PayoutStatus:
+      type: string
+      description: "Enumeration presenting the status of the payout: \n* `ACCEPTED`\
+        \ - The payout request has been accepted by pawaPay. \n* `PENDING` - The payout\
+        \ request is not yet submitted to the correspondent. \n* `SUBMITTED` - The\
+        \ payout request has been submitted to the correspondent, with no response\
+        \ yet. \n* `CANCELED` - Final state. The payout request was canceled by the\
+        \ customer. \n* `FAILED` - Final state. The payout request has failed. \n\
+        * `COMPLETED` - Final state. The payout request has been successful.\n"
+      enum:
+      - ACCEPTED
+      - PENDING
+      - SUBMITTED
+      - CANCELED
+      - FAILED
+      - COMPLETED
+    body:
+      required:
+      - callbackUrl
+      type: object
+      properties:
+        callbackUrl:
+          type: string
+          format: uri
+          example: https://myserver.com/send/payout/callback/here
+    body_1:
+      required:
+      - callbackUrl
+      type: object
+      properties:
+        callbackUrl:
+          type: string
+          format: uri
+          example: https://myserver.com/send/deposit/callback/here
+  requestBodies:
+    DepositCreationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DepositCreationRequest'
+      required: true
+    BulkDepositCreationRequest:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/DepositCreationRequest'
+      required: true
+    PayoutCreationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PayoutCreationRequest'
+      required: true
+    BulkPayoutCreationRequest:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/PayoutCreationRequest'
+      required: true
+x-tagGroups:
+- name: Payment
+  tags:
+  - payouts
+  - deposits
