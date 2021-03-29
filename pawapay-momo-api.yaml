@@ -691,40 +691,6 @@ paths:
                     errorId: "d428a89e-fa8b-42b8-ba20-68be20d50af1"
                     errorCode: 0
                     errorMessage: "Internal error"
-  /deposits/subscribe:
-    post:
-      tags:
-      - "deposits"
-      summary: "Subscribe to pawaPay deposit status notification callback."
-      requestBody:
-        content:
-          application/json:
-            schema:
-              required:
-              - "callbackUrl"
-              type: "object"
-              properties:
-                callbackUrl:
-                  type: "string"
-                  format: "uri"
-                  example: "https://myserver.com/send/deposit/callback/here"
-        required: true
-      responses:
-        "200":
-          description: "If webhook has been registered successfully."
-      callbacks:
-        depositCallback:
-          '{$request.body#/callbackUrl}':
-            post:
-              requestBody:
-                content:
-                  application/json:
-                    schema:
-                      $ref: "#/components/schemas/Deposit"
-                required: true
-              responses:
-                "200":
-                  description: "OK"
 components:
   schemas:
     AddressValue:
@@ -1292,13 +1258,30 @@ x-webhooks:
     post:
       tags:
       - "payouts"
-      summary: "Payout status notification"
+      summary: "Payout status notification callback"
       operationId: payoutWebhook
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/Payout"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+
+  depositCallback:
+    post:
+      tags:
+      - "deposits"
+      summary: "Deposit status notification callback"
+      operationId: depositWebhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Deposit"
+        required: true
       responses:
         "200":
           description: "OK"
