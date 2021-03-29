@@ -6,7 +6,6 @@ info:
     pawaPay Mobile Money API allows you to send and receive mobile money in several African countries. Using pawaPay API, with just one integration you'll have access to millions of mobile money users in multiple countries and multiple telcos. 
     
     # Introduction
-    
     Mobile Money (MM) is a service provided by Mobile Network Operators (MNO). A Mobile Money wallet is equivalent to a bank account where the Mobile Money user's phone number is the account number. Using our API, with one simple integration you can collect payments from and terminate disbursements to 250mn Mobile Money wallets in 10 countries.
 
     ![pawaPay Solution](https://pawapay.co.uk/s/pawapay_solution.png)
