@@ -380,8 +380,8 @@ paths:
     post:
       tags:
       - "deposits"
-      summary: "Submit a deposit transaction identified by a unique depositId for asynchronous processing (money collection from the payer)."
-      description: "This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>DepositCreationRequest</code> with the same <code>depositId</code> multiple times: duplicates are ignored with the corresponding <code>DepositCreationStatus</code>.
+      summary: "Mobile Money Collection Request"
+      description: "Submit a deposit transaction identified by a unique depositId for asynchronous processing (money collection from the payer). This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>DepositCreationRequest</code> with the same <code>depositId</code> multiple times: duplicates are ignored with the corresponding <code>DepositCreationStatus</code>.
         \n\n<b>NB!</b> Since the request can be rejected, an API user must check HTTP status code and <code>DepositCreationResponse</code>."
       operationId: "createDesposit"
       requestBody:
@@ -465,8 +465,8 @@ paths:
     post:
       tags:
       - "deposits"
-      summary: "Batch operation which can be used to submit multiple deposit transactions for asynchronous processing. NB! Bulk requests with more than 100 DepositCreationRequest-s can be rejected by pawaPay."
-      description: "This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>BulkDepositCreationRequest</code>  with the same <code>depositId</code> multiple times: duplicates are ignored with the corresponding <code>DepositeCreationStatus</code>.
+      summary: "Bulk Mobile Money Collection Request"
+      description: "Batch operation which can be used to submit multiple deposit transactions for asynchronous processing. NB! Bulk requests with more than 100 DepositCreationRequest-s can be rejected by pawaPay. This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>BulkDepositCreationRequest</code>  with the same <code>depositId</code> multiple times: duplicates are ignored with the corresponding <code>DepositeCreationStatus</code>.
         \n\n<b>NB!</b> Since the request can be partially of fully rejected, an API user must check HTTP status code and analyze <code>DepositCreationResponse</code> for each submitted <code>DepositCreationRequest</code>."
       operationId: "createDeposits"
       requestBody:
@@ -551,7 +551,8 @@ paths:
     get:
       tags:
       - "deposits"
-      summary: "Get deposit transaction status and deposit details by depositId which has been specified in DepositCreationRequest."
+      summary: "Get Deposit Status and Details"
+      description: "Get deposit transaction status and deposit details by depositId which has been specified in DepositCreationRequest."
       operationId: "getDeposit"
       parameters:
       - name: "depositId"
