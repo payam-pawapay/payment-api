@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 # Last Edit 28.03.21
 info:
-  title: "pawaPay Mobile Money API 4"
+  title: "pawaPay Mobile Money API 5"
   description: |
     pawaPay Mobile Money API allows you to send and receive mobile money in several African countries. Using pawaPay API, with just one integration you'll have access to millions of mobile money users in multiple countries and multiple telcos. 
     
@@ -15,11 +15,13 @@ info:
     
     When using bearer token authentication, you access the API with an access token issued by pawaPay. To get your authentication token, please contact: [support@pawapay.co.uk](support@pawapay.co.uk)
 
-    # Getting Started
+    # Payout Flow
     
-    ## Important section 
+    [![Payout Flow](https://pawapay.co.uk/s/pawapay_payout_flow.png)]
     
-    Some text
+    # Deposit Flow
+    
+    [![Deposit Flow](https://pawapay.co.uk/s/deposit_payout_flow.png)]
     
     # Sub Section 
     
@@ -42,7 +44,7 @@ tags:
 - name: "deposits"
   description: "Deposit (money in / collection) operations" #TODO
 x-tagGroups:
-  - name: Payment
+  - name: "API Reference"
     tags:
       - payouts
       - deposits
