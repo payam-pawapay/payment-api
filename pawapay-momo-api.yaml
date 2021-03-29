@@ -1287,7 +1287,7 @@ components:
               $ref: "#/components/schemas/PayoutCreationRequest"
       required: true
 
-webhooks:
+x-webhooks:
   payoutCallback:
     post:
       tags:
