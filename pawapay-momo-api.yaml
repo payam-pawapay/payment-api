@@ -45,7 +45,7 @@ info:
     * `COMPLETED` - The deposit request has been successful. This is a **final state**.
 
     Status | Description
-    --------------------
+    -------|------------
     `ACCEPTED` | The deposit request has been accepted and has not processed internally.
     `PENDING` | The deposit request is not yet submitted to the mobile operator.
     `SUBMITTED` | The deposit request has been submitted to the mobile operator, with no response yet.
