@@ -45,6 +45,9 @@ x-tagGroups:
       - payouts
       - deposits
 
+security:
+  - bearerAuth: []
+
 paths:
   /payouts:
     post:
@@ -465,7 +468,7 @@ paths:
     post:
       tags:
       - "deposits"
-      summary: "Bulk Mobile Money Collection Request"
+      summary: "Mobile Money Collection Request (Bulk)"
       description: "Batch operation which can be used to submit multiple deposit transactions for asynchronous processing. NB! Bulk requests with more than 100 DepositCreationRequest-s can be rejected by pawaPay. This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>BulkDepositCreationRequest</code>  with the same <code>depositId</code> multiple times: duplicates are ignored with the corresponding <code>DepositeCreationStatus</code>.
         \n\n<b>NB!</b> Since the request can be partially of fully rejected, an API user must check HTTP status code and analyze <code>DepositCreationResponse</code> for each submitted <code>DepositCreationRequest</code>."
       operationId: "createDeposits"
@@ -693,6 +696,11 @@ paths:
                     errorCode: 0
                     errorMessage: "Internal error"
 components:
+  securitySchemes:
+    bearerAuth:           
+      type: http
+      scheme: bearer
+#      bearerFormat: JWT
   schemas:
     AddressValue:
       type: "object"
