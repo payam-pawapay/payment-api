@@ -74,10 +74,10 @@ info:
 tags:
 - name: "payouts"
   x-displayName: "PAYOUTS"
-  description: "Payout (money out / disbursement) operations" #TODO
+#  description: "Payout (money out / disbursement) operations" #TODO
 - name: "deposits"
   x-displayName: "DEPOSITS"
-  description: "Deposit (money in / collection) operations" #TODO
+#  description: "Deposit (money in / collection) operations" #TODO
 - name: "payout_model"
   x-displayName: Payout Model
   description: |
@@ -91,10 +91,10 @@ x-tagGroups:
     tags:
       - payouts
       - deposits
-  - name: "Models"
-    tags:
-      - payout_model
-      - deposit_model
+  # - name: "Models"
+  #   tags:
+  #     - payout_model
+  #     - deposit_model
 
 security:
   - bearer_authentication: []
