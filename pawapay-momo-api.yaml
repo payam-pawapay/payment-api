@@ -105,7 +105,8 @@ paths:
       tags:
       - "payouts"
       summary: "Mobile Money Disbursement Request"
-      description: "Submit a payout transaction identified by a unique payoutId for asynchronous processing. This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>PayoutCreationRequest</code> with the same <code>payoutId</code> multiple times: duplicates are ignored with the corresponding <code>PayoutCreationStatus</code>.
+      description: |
+        Submits a payout transaction request. Each request is identified by a unique payoutId for asynchronous processing. This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>PayoutCreationRequest</code> with the same <code>payoutId</code> multiple times: duplicates are ignored with the corresponding <code>PayoutCreationStatus</code>.
         \n\n<b>NB!</b> Since the request can be rejected, an API user must check HTTP status code and <code>PayoutCreationResponse</code>."
       operationId: "createPayout"
       requestBody:
