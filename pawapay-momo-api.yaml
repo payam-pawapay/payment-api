@@ -7,7 +7,10 @@ info:
     
     # Introduction
     
-    This is the introduction.
+    Mobile Money (MM) is a service provided by Mobile Network Operators (MNO). A Mobile Money wallet is equivalent to a bank account where the Mobile Money user's phone number is the account number. Using our API, with one simple integration you can collect payments from and terminate disbursements to 250mn Mobile Money wallets in 10 countries.
+
+    ![pawaPay Solution](https://pawapay.co.uk/s/pawapay_solution.png)
+
 
     # Authentication
         
@@ -23,22 +26,6 @@ info:
     
     ![Deposit Flow](https://pawapay.co.uk/s/pawapay_deposit_flow.png)
     
-    # Glossery
-    ---
-    title: Glossary
-    description: Glossary of terms based on the 
-    navigation_weight: 6
-    ---
-    
-    # Glossary
-    
-    ## 10DLC
-    
-    10 digit long code (10DLC) is the new standard in Application to Person (A2P) text messaging. This standard allows businesses to have a higher volume throughput and improves security standards for messaging.
-    
-    ## 2FA
-    
-    Two-factor authentication
   contact:
     name: "pawaPay Support"
     email: "support@pawapay.co.uk"
