@@ -73,8 +73,10 @@ info:
 #  description: "SwaggerHub API Auto Mocking"
 tags:
 - name: "payouts"
+  x-displayName: "PAYOUTS"
   description: "Payout (money out / disbursement) operations" #TODO
 - name: "deposits"
+  x-displayName: "DEPOSITS"
   description: "Deposit (money in / collection) operations" #TODO
 - name: "payout_model"
   x-displayName: Payout Model
@@ -748,7 +750,7 @@ components:
   securitySchemes:
     bearer_authentication:           
       type: http
-      description: pawaPay API Security Scheme
+      description: pawaPay API uses bearer authentication as its security scheme.
       scheme: bearer
       bearerFormat: JWT
   schemas:
