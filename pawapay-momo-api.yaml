@@ -1298,6 +1298,6 @@ x-webhooks:
           application/json:
             schema:
               $ref: "#/components/schemas/Payout"
-    responses:
-      "200":
-        description: "OK"
+      responses:
+        "200":
+          description: "OK"
