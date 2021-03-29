@@ -748,6 +748,7 @@ components:
   securitySchemes:
     bearer_authentication:           
       type: http
+      description: pawaPay API Security Scheme
       scheme: bearer
       bearerFormat: JWT
   schemas:
