@@ -50,7 +50,7 @@ paths:
     post:
       tags:
       - "payouts"
-      summary: "Send a single mobile money transaction"
+      summary: "Mobile Money Disbursement Request"
       description: "Submit a payout transaction identified by a unique payoutId for asynchronous processing. This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>PayoutCreationRequest</code> with the same <code>payoutId</code> multiple times: duplicates are ignored with the corresponding <code>PayoutCreationStatus</code>.
         \n\n<b>NB!</b> Since the request can be rejected, an API user must check HTTP status code and <code>PayoutCreationResponse</code>."
       operationId: "createPayout"
@@ -135,7 +135,7 @@ paths:
     post:
       tags:
       - "payouts"
-      summary: "Send multiple mobile money transactions"
+      summary: "Mobile Money Disbursement Request (Bulk)"
       description: "Batch operation which can be used to submit multiple payout transactions for asynchronous processing. NB! Bulk requests with more than 100 PayoutCreationRequest-s can be rejected by pawaPay. This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>BulkPayoutCreationRequest</code>  with the same <code>payoutId</code> multiple times: duplicates are ignored with the corresponding <code>PayoutCreationStatus</code>.
         \n\n<b>NB!</b> Since the request can be partially of fully rejected, an API user must check HTTP status code and analyze <code>PayoutCreationResponse</code> for each submitted <code>PayoutCreationRequest</code>."
       operationId: "createPayouts"
@@ -218,7 +218,7 @@ paths:
     get:
       tags:
       - "payouts"
-      summary: "Get payout status & details"
+      summary: "Get Payout Status and Details"
       description: "Get payout transaction status and payout details by payoutId which has been specified in PayoutCreationRequest. A list with at most one <code>Payout</code> is returned."
       operationId: "getPayout"
       parameters:
@@ -1255,11 +1255,11 @@ components:
       required: true
 
 x-webhooks:
-  payoutWebhook:
+  payoutCallback:
     post:
       tags:
       - "payouts"
-      summary: "Payout status notification callback"
+      summary: "Payout Status Notification Callback"
       operationId: payoutWebhook
       requestBody:
         content:
@@ -1271,11 +1271,11 @@ x-webhooks:
         "200":
           description: "OK"
 
-  depositWebhook:
+  depositCallback:
     post:
       tags:
       - "deposits"
-      summary: "Deposit status notification callback"
+      summary: "Deposit Status Notification Callback"
       operationId: depositWebhook
       requestBody:
         content:
