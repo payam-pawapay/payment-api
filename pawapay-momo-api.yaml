@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 # Last Edit 28.03.21
 info:
-  title: "pawaPay Mobile Money API 3"
+  title: "pawaPay Mobile Money API 4"
   description: "
     pawaPay Mobile Money API allows you to send and receive mobile money in several African countries. Using pawaPay API, with just one integration you'll have access to millions of mobile money users in multiple countries and multiple telcos. 
     
@@ -9,7 +9,21 @@ info:
     
     This is the introduction.
 
-    This is Authentication
+# Authentication
+    
+pawaPay uses bearer token authentication. An authorization header is required for all calls to pawaPay endpoint. When authentication fails, the error code 401 is returned and in case of authorization failure, pawaPay returns error code 403.
+When using bearer token authentication, you access the API with an access token issued by pawaPay. 
+To get your authentication token, please contact 
+
+    # Authentication
+        
+    pawaPay uses bearer token authentication. An authorization header is required for all calls to pawaPay endpoint. When authentication fails, the error code 401 is returned and in case of authorization failure, pawaPay returns error code 403.
+    When using bearer token authentication, you access the API with an access token issued by pawaPay. 
+    To get your authentication token, please contact [support@pawapay.co.uk](support@pawapay.co.uk)
+
+
+
+
     
     # Getting Started
     
@@ -44,7 +58,7 @@ x-tagGroups:
       - deposits
 
 security:
-  - bearerAuth: []
+  - pawaPay_Authentication: []
 
 paths:
   /payouts:
@@ -695,10 +709,10 @@ paths:
                     errorMessage: "Internal error"
 components:
   securitySchemes:
-    bearerAuth:           
+    pawaPay_Authentication:           
       type: http
       scheme: bearer
-#      bearerFormat: JWT
+      bearerFormat: JWT
   schemas:
     AddressValue:
       type: "object"
