@@ -54,11 +54,23 @@ tags:
   description: "Payout (money out / disbursement) operations" #TODO
 - name: "deposits"
   description: "Deposit (money in / collection) operations" #TODO
+- name: "payout_model"
+  x-displayName: Payout Model
+  description: |
+    <SchemaDefinition schemaRef="#/components/schemas/Payout" />  
+- name: "deposit_model"
+  x-displayName: Deposit Model
+  description: |
+    <SchemaDefinition schemaRef="#/components/schemas/Deposit" />  
 x-tagGroups:
   - name: "API Reference"
     tags:
       - payouts
       - deposits
+  - name: "Models"
+    tags:
+      - payout_model
+      - deposit_model
 
 security:
   - bearer_authentication: []
