@@ -8,10 +8,7 @@ info:
     # Introduction
     
     This is the introduction.
-    
-    - [x] This is a complete item
-    - [ ] This is an incomplete item
-    
+
     # Authentication
     
     This is Authentication
@@ -53,8 +50,8 @@ paths:
     post:
       tags:
       - "payouts"
-      summary: "Submit a payout transaction identified by a unique payoutId for asynchronous processing."
-      description: "This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>PayoutCreationRequest</code> with the same <code>payoutId</code> multiple times: duplicates are ignored with the corresponding <code>PayoutCreationStatus</code>.
+      summary: "Send a single mobile money transaction"
+      description: "Submit a payout transaction identified by a unique payoutId for asynchronous processing. This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>PayoutCreationRequest</code> with the same <code>payoutId</code> multiple times: duplicates are ignored with the corresponding <code>PayoutCreationStatus</code>.
         \n\n<b>NB!</b> Since the request can be rejected, an API user must check HTTP status code and <code>PayoutCreationResponse</code>."
       operationId: "createPayout"
       requestBody:
@@ -138,8 +135,8 @@ paths:
     post:
       tags:
       - "payouts"
-      summary: "Batch operation which can be used to submit multiple payout transactions for asynchronous processing. NB! Bulk requests with more than 100 PayoutCreationRequest-s can be rejected by pawaPay."
-      description: "This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>BulkPayoutCreationRequest</code>  with the same <code>payoutId</code> multiple times: duplicates are ignored with the corresponding <code>PayoutCreationStatus</code>.
+      summary: "Send multiple mobile money transactions"
+      description: "Batch operation which can be used to submit multiple payout transactions for asynchronous processing. NB! Bulk requests with more than 100 PayoutCreationRequest-s can be rejected by pawaPay. This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>BulkPayoutCreationRequest</code>  with the same <code>payoutId</code> multiple times: duplicates are ignored with the corresponding <code>PayoutCreationStatus</code>.
         \n\n<b>NB!</b> Since the request can be partially of fully rejected, an API user must check HTTP status code and analyze <code>PayoutCreationResponse</code> for each submitted <code>PayoutCreationRequest</code>."
       operationId: "createPayouts"
       requestBody:
@@ -221,8 +218,8 @@ paths:
     get:
       tags:
       - "payouts"
-      summary: "Get payout transaction status and payout details by payoutId which has been specified in PayoutCreationRequest."
-      description: "A list with at most one <code>Payout</code> is returned."
+      summary: "Get payout status & details"
+      description: "Get payout transaction status and payout details by payoutId which has been specified in PayoutCreationRequest. A list with at most one <code>Payout</code> is returned."
       operationId: "getPayout"
       parameters:
       - name: "payoutId"
@@ -376,40 +373,6 @@ paths:
                     errorId: "d428a89e-fa8b-42b8-ba20-68be20d50af1"
                     errorCode: 0
                     errorMessage: "Internal error"
-  /payouts/subscribe:
-    post:
-      tags:
-      - "payouts"
-      summary: "Subscribe to pawaPay payout status notification callback."
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: "object"
-              required:
-              - "callbackUrl"
-              properties:
-                callbackUrl:
-                  type: "string"
-                  format: "uri"
-                  example: "https://myserver.com/send/payout/callback/here"
-        required: true
-      responses:
-        "200":
-          description: "If webhook has been registered successfully."
-      callbacks:
-        payoutCallback:
-          '{$request.body#/callbackUrl}':
-            post:
-              requestBody:
-                content:
-                  application/json:
-                    schema:
-                      $ref: "#/components/schemas/Payout"
-                required: true
-              responses:
-                "200":
-                  description: "OK"
 
 
 
@@ -1323,3 +1286,19 @@ components:
             items:
               $ref: "#/components/schemas/PayoutCreationRequest"
       required: true
+
+  x-webhooks:
+    payoutCallback:
+      post:
+        tags:
+        - "payouts"
+        summary: "Payout status notification"
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payout"
+        required: true
+      responses:
+        "200":
+          description: "OK"
