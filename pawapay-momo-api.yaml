@@ -121,24 +121,23 @@ paths:
         $ref: "#/components/requestBodies/PayoutCreationRequest"
       responses:
         "200":
-          description: "If a <code>PayoutCreationRequest</code> has been processed (but not necessarily accepted) by pawaPay.
-            \n\n<b>NB!</b> An API user must analyze <code>PayoutCreationStatus</code> to check whether payout request was <em>accepted</em>, <em>rejected</em> or <em>ignored</em> as a duplicate."
+          description: "Payout Request has been processed by pawaPay."
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PayoutCreationResponse"
               examples:
-                Accepted response:
+                ACCEPTED:
                   value:
                     payoutId: "f4401bd2-1568-4140-bf2d-eb77d2b2b639"
                     status: "ACCEPTED"
                     created: "2020-10-19T11:17:01Z"
-                Duplicate ingored response:
+                DUPLICATE_IGNORED:
                   value:
                     payoutId: "f4401bd2-1568-4140-bf2d-eb77d2b2b639"
                     status: "DUPLICATE_IGNORED"
                     created: "2020-10-19T11:17:01Z"
-                Rejected response:
+                REJECTED:
                   value:
                     payoutId: "f4401bd2-1568-4140-bf2d-eb77d2b2b639"
                     status: "REJECTED"
@@ -146,19 +145,19 @@ paths:
                       rejectionCode: "AMOUNT_TOO_LARGE"
                       rejectionMessage: "Amount should not be greater than 1000"
         "400":
-          description: "If a <code>PayoutCreationRequest</code> has been rejected due to incompatibility with pawaPay API specification."
+          description:  "Request is not compatible with pawaPay API specification."
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Missing mandatory field:
+                Missing Mandatory Field:
                   value:
                     errorId: "4f0d5e13-7e88-4cc6-827c-8c0640dc2cd3"
                     errorCode: 1
                     errorMessage: "Invalid input: Missing required creator property 'amount'"
         "401":
-          description: "If authentication has failed. Please make sure that valid authentication token is provided."
+          description: "Authentication Failure."
           content:
             application/json:
               schema:
@@ -170,7 +169,7 @@ paths:
                     errorCode: 2
                     errorMessage: "Authentication error"
         "403":
-          description: "If authentication was successful, but authorization has failed. Please make sure that valid authentication token is provided."
+          description: "Authorization Failure."
           content:
             application/json:
               schema:
@@ -182,8 +181,7 @@ paths:
                     errorCode: 3
                     errorMessage: "Authorization error"
         "500":
-          description: "If a system error has occured.
-            \n\n<b>NB!</b> Strictly speaking, payout transaction status is undetermined at this point and therefore an API user must either check payout status or try to submit <code>PayoutCreationRequest</code> with the same <code>payoutId</code> again."
+          description: "System Error."
           content:
             application/json:
               schema:
