@@ -1287,17 +1287,17 @@ components:
               $ref: "#/components/schemas/PayoutCreationRequest"
       required: true
 
-# x-webhooks:
-#   payoutCallback:
-#     post:
-#       tags:
-#       - "payouts"
-#       summary: "Payout status notification"
-#       requestBody:
-#         content:
-#           application/json:
-#             schema:
-#               $ref: "#/components/schemas/Payout"
-#       responses:
-#         "200":
-#           description: "OK"
+x-webhooks:
+  payoutCallback:
+    post:
+      tags:
+      - "payouts"
+      summary: "Payout status notification"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Payout"
+      responses:
+        "200":
+          description: "OK"
