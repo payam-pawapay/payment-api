@@ -157,7 +157,7 @@ paths:
                     errorCode: 1
                     errorMessage: "Invalid input: Missing required creator property 'amount'"
         "401":
-          description: "Authentication Failure."
+          description: "Authentication Failure. Please make sure that valid authentication token is provided."
           content:
             application/json:
               schema:
@@ -169,7 +169,7 @@ paths:
                     errorCode: 2
                     errorMessage: "Authentication error"
         "403":
-          description: "Authorization Failure."
+          description: "Authorization Failure. Please make sure that valid authentication token is provided."
           content:
             application/json:
               schema:
@@ -1207,12 +1207,12 @@ components:
       type: "string"
       description: "Enumeration presenting the status of the `PayoutCreationResponse`:
         \n* `ACCEPTED` - The payout creation request has been accepted.
-        \n* `REJECTED` - The payout creation request has been rejected. See `PayoutRejectionReason` for details.
-        \n* `DUPLICATE_IGNORED` - The payout creation request has been ignored as a duplicate of already accepted payout creation request. Deduplication logic relies upon payoutId.\n"
-      enum:
-      - "ACCEPTED"
-      - "REJECTED"
-      - "DUPLICATE_IGNORED"
+        \n* `REJECTED` - The payout creation request has been rejected. See rejectionReason for details.
+        \n* `DUPLICATE_IGNORED` - The payout creation request has been ignored as a duplicate of already accepted payout creation request. Duplication logic relies upon payoutId.\n"
+      # enum:
+      # - "ACCEPTED"
+      # - "REJECTED"
+      # - "DUPLICATE_IGNORED"
     PayoutFailureReason:
       type: "object"
       required:
