@@ -1254,7 +1254,7 @@ components:
       required: true
 
 x-webhooks:
-  payoutCallback:
+  payoutWebhook:
     post:
       tags:
       - "payouts"
@@ -1270,7 +1270,7 @@ x-webhooks:
         "200":
           description: "OK"
 
-  depositCallback:
+  depositWebhook:
     post:
       tags:
       - "deposits"
