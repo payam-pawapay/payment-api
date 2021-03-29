@@ -9,22 +9,12 @@ info:
     
     This is the introduction.
 
-# Authentication
-    
-pawaPay uses bearer token authentication. An authorization header is required for all calls to pawaPay endpoint. When authentication fails, the error code 401 is returned and in case of authorization failure, pawaPay returns error code 403.
-When using bearer token authentication, you access the API with an access token issued by pawaPay. 
-To get your authentication token, please contact 
-
     # Authentication
         
     pawaPay uses bearer token authentication. An authorization header is required for all calls to pawaPay endpoint. When authentication fails, the error code 401 is returned and in case of authorization failure, pawaPay returns error code 403.
-    When using bearer token authentication, you access the API with an access token issued by pawaPay. 
-    To get your authentication token, please contact [support@pawapay.co.uk](support@pawapay.co.uk)
-
-
-
-
     
+    When using bearer token authentication, you access the API with an access token issued by pawaPay. To get your authentication token, please contact: [support@pawapay.co.uk](support@pawapay.co.uk)
+
     # Getting Started
     
     ## Important section 
@@ -58,7 +48,7 @@ x-tagGroups:
       - deposits
 
 security:
-  - pawaPay_Authentication: []
+  - bearer_authentication: []
 
 paths:
   /payouts:
@@ -709,7 +699,7 @@ paths:
                     errorMessage: "Internal error"
 components:
   securitySchemes:
-    pawaPay_Authentication:           
+    bearer_authentication:           
       type: http
       scheme: bearer
       bearerFormat: JWT
