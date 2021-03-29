@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 # Last Edit 28.03.21
 info:
-  title: "pawaPay Mobile Money API y"
+  title: "pawaPay Mobile Money API 1"
   description: "
     pawaPay Mobile Money API allows you to send and receive mobile money in several African countries. Using pawaPay API, with just one integration you'll have access to millions of mobile money users in multiple countries and multiple telcos. 
     
