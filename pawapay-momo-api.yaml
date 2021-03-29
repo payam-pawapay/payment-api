@@ -23,11 +23,11 @@ info:
     In a payout flow you initiate a request to transfer money from your wallet to a user's wallet. In a payout flow, pawaPay receives your request and sends it to the proper mobile network operator in the destination country. Whenever the the mobile operator finalize your payout request, it will inform pawaPay and consequently pawaPay informs you of the result through a webhook callback. If you couldn't recieve the callback, you can always call our Get API to get the latest status and details of a specific payout request. 
     
     Your payout request in pawaPay system can have one of the following statuses:
-    * `ACCEPTED` - The payout request has been accepted by pawaPay.
-    * `PENDING` - The payout request is not yet submitted to the mobile operator.
-    * `SUBMITTED` - The payout request has been submitted to the mobile operator, with no response yet.
-    * `FAILED` - The payout request has failed. This is a **Final state**. 
-    * `COMPLETED` - The payout request has been successful. This is a **Final state**.
+    * `ACCEPTED` The payout request has been accepted by pawaPay.
+    * `PENDING` The payout request is not yet submitted to the mobile operator.
+    * `SUBMITTED` The payout request has been submitted to the mobile operator, with no response yet.
+    * `FAILED` The payout request has failed. This is a **Final state**. 
+    * `COMPLETED` The payout request has been successful. This is a **Final state**.
 
     ![Payout Flow](https://pawapay.co.uk/s/pawapay_payout_flow.png)
     
