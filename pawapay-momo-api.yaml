@@ -3,27 +3,43 @@ openapi: "3.0.0"
 info:
   title: "pawaPay Mobile Money API 5"
   description: |
-    pawaPay Mobile Money API allows you to send and receive mobile money in several African countries. Using pawaPay API, with just one integration you'll have access to millions of mobile money users in multiple countries and multiple telcos. 
+    pawaPay Mobile Money API allows you to send and receive mobile money in several African countries. Using pawaPay API, with just one integration you'll have access to millions of mobile money users in multiple countries and multiple mobile operators. 
     
     # Introduction
-    Mobile Money (MM) is a service provided by Mobile Network Operators (MNO). A Mobile Money wallet is equivalent to a bank account where the Mobile Money user's phone number is the account number. Using our API, with one simple integration you can collect payments from and terminate disbursements to 250mn Mobile Money wallets in 10 countries.
+    
+    Mobile Money (MM) is a service provided by Mobile Network Operators (MNO). A mobile money wallet is equivalent to a bank account where the mobile money user's phone number is the account number. Using our API, with one simple integration you can collect payments from and terminate disbursements to 250mn mobile money wallets in 10 countries.
 
     ![pawaPay Solution](https://pawapay.co.uk/s/pawapay_solution.png)
 
+    pawaPay API currently supports these 2 main flows:
+    * **Payout (Disbursement)**
+    Using Payout API you can send mobile money from your account to the user's mobile money wallet which is his / her mobile number.
+    
+    * **Deposit (Collection)**
+    Using Deposit API you can request a mobile money payment from your customers, for example in an online shop. When the request is sent, the user is asked to approve the transaction on his / her mobile phone.
+
+    # Payout (Disbursement)
+    
+    In a payout flow you initiate a request to transfer money from your wallet to a user's wallet. In a payout flow, pawaPay receives your request and sends it to the proper mobile network operator in the destination country. Whenever the the mobile operator finalize your payout request, it will inform pawaPay and consequently pawaPay informs you of the result through a webhook callback. If you couldn't recieve the callback, you can always call our Get API to get the latest status and details of a specific payout request. 
+    
+    Your payout request in pawaPay system can have one of the following statuses:
+    * `ACCEPTED` - The payout request has been accepted by pawaPay.
+    * `PENDING` - The payout request is not yet submitted to the mobile operator.
+    * `SUBMITTED` - The payout request has been submitted to the mobile operator, with no response yet.
+    * `FAILED` - The payout request has failed. This is a **Final state**. 
+    * `COMPLETED` - The payout request has been successful. This is a **Final state**.
+
+    ![Payout Flow](https://pawapay.co.uk/s/pawapay_payout_flow.png)
+    
+    # Deposit (Collection)
+    
+    ![Deposit Flow](https://pawapay.co.uk/s/pawapay_deposit_flow.png)
 
     # Authentication
         
     pawaPay uses bearer token authentication. An authorization header is required for all calls to pawaPay endpoint. When authentication fails, the error code 401 is returned and in case of authorization failure, pawaPay returns error code 403.
     
     When using bearer token authentication, you access the API with an access token issued by pawaPay. To get your authentication token, please contact: [support@pawapay.co.uk](support@pawapay.co.uk)
-
-    # Payout Flow
-    
-    ![Payout Flow](https://pawapay.co.uk/s/pawapay_payout_flow.png)
-    
-    # Deposit Flow
-    
-    ![Deposit Flow](https://pawapay.co.uk/s/pawapay_deposit_flow.png)
     
   contact:
     name: "pawaPay Support"
