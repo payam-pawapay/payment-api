@@ -24,12 +24,16 @@ info:
     
     Your payout request can have one of the following statuses in pawaPay system:
     
-    * `ACCEPTED` The payout request has been accepted by pawaPay.
-    * `PENDING` The payout request is not yet submitted to the mobile operator.
-    * `SUBMITTED` The payout request has been submitted to the mobile operator, with no response yet.
-    * `FAILED` The payout request has failed. This is a **final state**. 
-    * `COMPLETED` The payout request has been successful. This is a **final state**.
+    Status | Description
+    -------|------------
+    `ACCEPTED` | The payout request has been accepted by pawaPay.
+    `PENDING` | The payout request is not yet submitted to the mobile operator.
+    `SUBMITTED` | The payout request has been submitted to the mobile operator, with no response yet.
+    `FAILED` | The payout request has failed. This is a **final state**. 
+    `COMPLETED` | The payout request has been successful. This is a **final state**.
 
+    Below sequence diagram demonstrates the high level flow of a payout request together with its different statuses:
+    
     ![Payout Flow](https://pawapay.co.uk/s/pawapay_payout_flow.png)
     
     # Deposit (Collection)
@@ -37,12 +41,6 @@ info:
     In the deposit flow you request money from a specific user, like the checkout process in an online shop or a mobile app. After the deposit request is sent to pawaPay, pawaPay sends the request to the mobile operator and consequently the mobile operator sends the request to the user's mobile for approval. User then confirms or rejects the request using his mobile phone. The approval mechanism is different for each mobile operator and in each country. It can be through SMS, USSD or specific applications. Upon user's approval (or rejection), mobile operators informs pawaPay of the result and pawaPay notifies you of the result by calling your deposit webhook callback. If you miss our callback, you can always check for the status of your deposit request through our Deposit Get API.
 
     Your deposit request can have one of the following statuses in pawaPay system:
-          
-    * `ACCEPTED` - The deposit request has been accepted and has not processed internally.
-    * `PENDING` - The deposit request is not yet submitted to the mobile operator.
-    * `SUBMITTED` - The deposit request has been submitted to the mobile operator, with no response yet.
-    * `FAILED` - The deposit request has failed. This is a **final state**.
-    * `COMPLETED` - The deposit request has been successful. This is a **final state**.
 
     Status | Description
     -------|------------
@@ -53,6 +51,8 @@ info:
     `COMPLETED` | The deposit request has been successful. This is a **final state**.
     
     
+    Below sequence diagram demonstrates the high level flow of a deposit request together with its different statuses:
+
     ![Deposit Flow](https://pawapay.co.uk/s/pawapay_deposit_flow.png)
 
     # Authentication
