@@ -1293,7 +1293,7 @@ x-webhooks:
       tags:
       - "payouts"
       summary: "Payout status notification"
-      operationId: payout callback
+      operationId: payout x callback
       requestBody:
         content:
           application/json:
