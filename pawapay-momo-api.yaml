@@ -1291,7 +1291,7 @@ x-webhooks:
   payoutCallback:
     post:
       tags:
-      - "payoutsx"
+      - "payouts"
       summary: "Payout status notification"
       requestBody:
         content:
