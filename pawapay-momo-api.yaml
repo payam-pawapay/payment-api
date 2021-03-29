@@ -151,31 +151,31 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Missing Mandatory Field:
+                Mandatory Field Missing:
                   value:
                     errorId: "4f0d5e13-7e88-4cc6-827c-8c0640dc2cd3"
                     errorCode: 1
                     errorMessage: "Invalid input: Missing required creator property 'amount'"
         "401":
-          description: "Authentication Failure. Please make sure that valid authentication token is provided."
+          description: "Authentication Failure. Please check your authentication token."
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Failed authentication:
+                Authentication Failure:
                   value:
                     errorId: "cad1529e-040b-4c9d-a21d-2ba3056ff750"
                     errorCode: 2
                     errorMessage: "Authentication error"
         "403":
-          description: "Authorization Failure. Please make sure that valid authentication token is provided."
+          description: "Authorization Failure. Please check your authentication token."
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Failed authorization:
+                Authorization Failure:
                   value:
                     errorId: "daa495f0-541d-4192-b636-a8877b25a510"
                     errorCode: 3
@@ -187,7 +187,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                System error:
+                System Error:
                   value:
                     errorId: "d428a89e-fa8b-42b8-ba20-68be20d50af1"
                     errorCode: 0
@@ -213,7 +213,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/PayoutCreationResponse"
               examples:
-                Mixed response:
+                Mixed Response:
                   value:
                     - payoutId: "f4401bd2-1568-4140-bf2d-eb77d2b2b639"
                       status: "ACCEPTED"
@@ -233,7 +233,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Missing mandatory field:
+                Missing Mandatory Field:
                   value:
                     errorId: "4f0d5e13-7e88-4cc6-827c-8c0640dc2cd3"
                     errorCode: 1
@@ -245,7 +245,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Failed authentication:
+                Authentication Failure:
                   value:
                     errorId: "cad1529e-040b-4c9d-a21d-2ba3056ff750"
                     errorCode: 2
@@ -257,20 +257,19 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Failed authorization:
+                Authorization Failure:
                   value:
                     errorId: "daa495f0-541d-4192-b636-a8877b25a510"
                     errorCode: 3
                     errorMessage: "Authorization error"
         "500":
-          description: "If a system error has occured.
-            \n\n<b>NB!</b> Strictly speaking, statuses of submitted payout transactions are undetermined at this point and therefore an API user must either check their statuses or try to submit them with the same <code>payoutId</code>-s again."
+          description: "System Error."
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                System error:
+                System Error:
                   value:
                     errorId: "d428a89e-fa8b-42b8-ba20-68be20d50af1"
                     errorCode: 0
@@ -301,7 +300,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/PayoutSearchResult"
               examples:
-                Completed payout:
+                COMPLETED:
                   value:
                     - payoutId: "8917c345-4791-4285-a416-62f24b6982db"
                       status: "COMPLETED"
@@ -319,7 +318,7 @@ paths:
                       receivedByRecipient: "2020-10-19T08:17:02Z"
                       correspondentIds:
                         SOME_CORRESPONDENT_ID: "12356789"
-                Accepted payout:
+                ACCEPTED:
                   value:
                     - payoutId: "8917c345-4791-4285-a416-62f24b6982db"
                       status: "ACCEPTED"
@@ -334,7 +333,7 @@ paths:
                       customerTimestamp: "2020-10-19T08:17:00Z"
                       statementDescription: "From ACME company"
                       created: "2020-10-19T08:17:01Z"
-                Pending payout:
+                PENDING:
                   value:
                     - payoutId: "8917c345-4791-4285-a416-62f24b6982db"
                       status: "PENDING"
@@ -349,7 +348,7 @@ paths:
                       customerTimestamp: "2020-10-19T08:17:00Z"
                       statementDescription: "From ACME company"
                       created: "2020-10-19T08:17:01Z"
-                Submitted payout:
+                SUBMITTED:
                   value:
                     - payoutId: "8917c345-4791-4285-a416-62f24b6982db"
                       status: "SUBMITTED"
@@ -364,7 +363,7 @@ paths:
                       customerTimestamp: "2020-10-19T08:17:00Z"
                       statementDescription: "From ACME company"
                       created: "2020-10-19T08:17:01Z"
-                Failed payout:
+                FAILED:
                   value:
                     - payoutId: "8917c345-4791-4285-a416-62f24b6982db"
                       status: "FAILED"
@@ -382,7 +381,7 @@ paths:
                       failureReason:
                         failureCode: "RECIPIENT_NOT_FOUND"
                         failureMessage: "Recipient not found"
-                Payout not found:
+                Payout Not Found:
                   value:
                     []
 
@@ -393,7 +392,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Missing mandatory field:
+                Mandatory Field Missing:
                   value:
                     errorId: "4f0d5e13-7e88-4cc6-827c-8c0640dc2cd3"
                     errorCode: 1
@@ -405,7 +404,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Failed authentication:
+                Authentication Failure:
                   value:
                     errorId: "cad1529e-040b-4c9d-a21d-2ba3056ff750"
                     errorCode: 2
@@ -417,19 +416,19 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Failed authorization:
+                Authorization Failure:
                   value:
                     errorId: "daa495f0-541d-4192-b636-a8877b25a510"
                     errorCode: 3
                     errorMessage: "Authorization error"
         "500":
-          description: "If a system error has occured."
+          description: "System Error."
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                System error:
+                System Error:
                   value:
                     errorId: "d428a89e-fa8b-42b8-ba20-68be20d50af1"
                     errorCode: 0
@@ -456,17 +455,17 @@ paths:
               schema:
                 $ref: "#/components/schemas/DepositCreationResponse"
               examples:
-                Accepted response:
+                ACCEPTED:
                   value:
                     depositId: "f4401bd2-1568-4140-bf2d-eb77d2b2b639"
                     status: "ACCEPTED"
                     created: "2020-10-19T11:17:01Z"
-                Duplicate ingored response:
+                DUPLICATE_IGNORED:
                   value:
                     depositId: "f4401bd2-1568-4140-bf2d-eb77d2b2b639"
                     status: "DUPLICATE_IGNORED"
                     created: "2020-10-19T11:17:01Z"
-                Rejected response:
+                REJECTED:
                   value:
                     depositId: "f4401bd2-1568-4140-bf2d-eb77d2b2b639"
                     status: "REJECTED"
@@ -480,7 +479,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Missing mandatory field:
+                Missing Mandatory Field:
                   value:
                     errorId: "4f0d5e13-7e88-4cc6-827c-8c0640dc2cd3"
                     errorCode: 1
@@ -492,7 +491,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Failed authentication:
+                Authentication Failure:
                   value:
                     errorId: "cad1529e-040b-4c9d-a21d-2ba3056ff750"
                     errorCode: 2
@@ -504,20 +503,19 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Failed authorization:
+                Authorization Failure:
                   value:
                     errorId: "daa495f0-541d-4192-b636-a8877b25a510"
                     errorCode: 3
                     errorMessage: "Authorization error"
         "500":
-          description: "If a system error has occured.
-            \n\n<b>NB!</b> Strictly speaking, deposit transaction status is undetermined at this point and therefore an API user must either check payout status or try to submit <code>DepositCreationRequest</code> with the same <code>depositId</code> again."
+          description: "System Error."
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                System error:
+                System Error:
                   value:
                     errorId: "d428a89e-fa8b-42b8-ba20-68be20d50af1"
                     errorCode: 0
@@ -575,7 +573,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Failed authentication:
+                Authentication Failure:
                   value:
                     errorId: "cad1529e-040b-4c9d-a21d-2ba3056ff750"
                     errorCode: 2
@@ -587,20 +585,19 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                Failed authorization:
+                Authorization Failure:
                   value:
                     errorId: "daa495f0-541d-4192-b636-a8877b25a510"
                     errorCode: 3
                     errorMessage: "Authorization error"
         "500":
-          description: "If a system error has occured.
-            \n\n<b>NB!</b> Strictly speaking, statuses of submitted deposit transactions are undetermined at this point and therefore an API user must either check their statuses or try to submit them with the same <code>depositId</code>-s again."
+          description: "System Error."
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                System error:
+                System Error:
                   value:
                     errorId: "d428a89e-fa8b-42b8-ba20-68be20d50af1"
                     errorCode: 0
@@ -653,7 +650,7 @@ paths:
                       respondedByPayer: "2020-10-19T08:17:02Z"
                       correspondentIds:
                         SOME_CORRESPONDENT_ID: "12356789"
-                Completed suspicious deposit:
+                COMPLETED:
                   value:
                     - depositId: "8917c345-4791-4285-a416-62f24b6982db"
                       status: "COMPLETED"
@@ -675,7 +672,7 @@ paths:
                       suspiciousActivityReport:
                       - activityType: "AMOUNT_DISCREPANCY"
                         comment: "There is a discrepancy between requested and actual deposit amount has been detected."
-                Accepted deposit:
+                ACCEPTED:
                   value:
                     - depositId: "8917c345-4791-4285-a416-62f24b6982db"
                       status: "ACCEPTED"
@@ -690,7 +687,7 @@ paths:
                       statementDescription: "To ACME company"
                       customerTimestamp: "2020-10-19T08:17:00Z"
                       created: "2020-10-19T08:17:01Z"
-                Pending deposit:
+                PENDING:
                   value:
                     - depositId: "8917c345-4791-4285-a416-62f24b6982db"
                       status: "PENDING"
@@ -705,7 +702,7 @@ paths:
                       statementDescription: "To ACME company"
                       customerTimestamp: "2020-10-19T08:17:00Z"
                       created: "2020-10-19T08:17:01Z"
-                Submitted deposit:
+                SUBMITTED:
                   value:
                     - depositId: "8917c345-4791-4285-a416-62f24b6982db"
                       status: "SUBMITTED"
@@ -720,7 +717,7 @@ paths:
                       statementDescription: "To ACME company"
                       customerTimestamp: "2020-10-19T08:17:00Z"
                       created: "2020-10-19T08:17:01Z"
-                Failed deposit:
+                FAILED:
                   value:
                     - depositId: "8917c345-4791-4285-a416-62f24b6982db"
                       status: "FAILED"
@@ -738,17 +735,17 @@ paths:
                       failureReason:
                         failureCode: "PAYMENT_NOT_APPROVED"
                         failureMessage: "Payment not approved"
-                Deposit not found:
+                Deposit Not Found:
                   value:
                     []
         "500":
-          description: "If a system error has occured."
+          description: "System Error."
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
               examples:
-                System error:
+                System Error:
                   value:
                     errorId: "d428a89e-fa8b-42b8-ba20-68be20d50af1"
                     errorCode: 0
@@ -1205,7 +1202,7 @@ components:
           $ref: "#/components/schemas/PayoutRejectionReason"
     PayoutCreationStatus:
       type: "string"
-      description: "Enumeration presenting the status of the `PayoutCreationResponse`:
+      description: "Enumeration presenting the status of the Payout Creation:
         \n* `ACCEPTED` - The payout creation request has been accepted.
         \n* `REJECTED` - The payout creation request has been rejected. See rejectionReason for details.
         \n* `DUPLICATE_IGNORED` - The payout creation request has been ignored as a duplicate of already accepted payout creation request. Duplication logic relies upon payoutId.\n"
@@ -1256,17 +1253,17 @@ components:
             \n* `RATE_LIMIT` - The number of allowed requests within a certain time period are exceeded.
             \n* `PAYOUTS_NOT_ALLOWED` - Payouts are not allowed for this customer, this correspondent or this recipient.\n"
           example: "INVALID_AMOUNT"
-          enum:
-          - "BALANCE_INSUFFICIENT"
-          - "INVALID_RECIPIENT_FORMAT"
-          - "INVALID_AMOUNT"
-          - "AMOUNT_TOO_SMALL"
-          - "AMOUNT_TOO_LARGE"
-          - "INVALID_CURRENCY"
-          - "INVALID_COUNTRY"
-          - "PARAMETER_INVALID"
-          - "RATE_LIMIT"
-          - "PAYOUTS_NOT_ALLOWED"
+          # enum:
+          # - "BALANCE_INSUFFICIENT"
+          # - "INVALID_RECIPIENT_FORMAT"
+          # - "INVALID_AMOUNT"
+          # - "AMOUNT_TOO_SMALL"
+          # - "AMOUNT_TOO_LARGE"
+          # - "INVALID_CURRENCY"
+          # - "INVALID_COUNTRY"
+          # - "PARAMETER_INVALID"
+          # - "RATE_LIMIT"
+          # - "PAYOUTS_NOT_ALLOWED"
         rejectionMessage:
           type: "string"
           description: "Additional optional rejection message"
