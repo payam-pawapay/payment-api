@@ -11,7 +11,7 @@ info:
 
     ![pawaPay Solution](https://pawapay.co.uk/s/pawapay_solution.png)
 
-    pawaPay API currently supports these 2 main flows:
+    pawaPay API supports these 2 main flows:
     * **Payout (Disbursement)**
     Using Payout API you can send mobile money from your account to the user's mobile money wallet which is his / her mobile number.
     
