@@ -121,7 +121,7 @@ paths:
         $ref: "#/components/requestBodies/PayoutCreationRequest"
       responses:
         "200":
-          description: "Payout Request has been processed by pawaPay."
+          description: "Request has been processed by pawaPay"
           content:
             application/json:
               schema:
@@ -145,7 +145,7 @@ paths:
                       rejectionCode: "AMOUNT_TOO_LARGE"
                       rejectionMessage: "Amount should not be greater than 1000"
         "400":
-          description:  "Request is not compatible with pawaPay API specification."
+          description:  "Request is rejected due to incompatibility with pawaPay API specification"
           content:
             application/json:
               schema:
@@ -157,7 +157,7 @@ paths:
                     errorCode: 1
                     errorMessage: "Invalid input: Missing required creator property 'amount'"
         "401":
-          description: "Authentication Failure. Please check your authentication token."
+          description: "Authentication Failure. Please check your authentication token"
           content:
             application/json:
               schema:
@@ -169,7 +169,7 @@ paths:
                     errorCode: 2
                     errorMessage: "Authentication error"
         "403":
-          description: "Authorization Failure. Please check your authentication token."
+          description: "Authorization Failure. Please check your authentication token"
           content:
             application/json:
               schema:
@@ -181,7 +181,7 @@ paths:
                     errorCode: 3
                     errorMessage: "Authorization error"
         "500":
-          description: "System Error."
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -204,7 +204,7 @@ paths:
         $ref: "#/components/requestBodies/BulkPayoutCreationRequest"
       responses:
         "200":
-          description: "Bulk request has been processed by pawaPay."
+          description: "Request has been processed by pawaPay"
           content:
             application/json:
               schema:
@@ -226,7 +226,7 @@ paths:
                         rejectionCode: "AMOUNT_TOO_LARGE"
                         ejectionMessage: "Amount should not be greater than 1000"
         "400":
-          description: "If a <code>BulkPayoutCreationRequest</code> has been rejected due to incompatibility with pawaPay API specification."
+          description: "Request is rejected due to incompatibility with pawaPay API specification"
           content:
             application/json:
               schema:
@@ -238,7 +238,7 @@ paths:
                     errorCode: 1
                     errorMessage: "Invalid input: Missing required creator property 'amount'"
         "401":
-          description: "If authentication has failed. Please make sure that a valid authentication token is provided."
+          description: "Authentication Failure. Please check your authentication token"
           content:
             application/json:
               schema:
@@ -250,7 +250,7 @@ paths:
                     errorCode: 2
                     errorMessage: "Authentication error"
         "403":
-          description: "If authentication was successful, but authorization has failed. Please make sure that a valid authentication token is provided."
+          description: "Authorization Failure. Please check your authentication token"
           content:
             application/json:
               schema:
@@ -262,7 +262,7 @@ paths:
                     errorCode: 3
                     errorMessage: "Authorization error"
         "500":
-          description: "System Error."
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -293,7 +293,7 @@ paths:
           maxLength: 36
       responses:
         "200":
-          description: "Request has been processed by pawaPay successfully."
+          description: "Request has been processed by pawaPay"
           content:
             application/json:
               schema:
@@ -385,7 +385,7 @@ paths:
                     []
 
         "400":
-          description: "If a <code>BulkPayoutCreationRequest</code> has been rejected due to incompatibility with pawaPay API specification."
+          description: "Request is rejected due to incompatibility with pawaPay API specification"
           content:
             application/json:
               schema:
@@ -397,7 +397,7 @@ paths:
                     errorCode: 1
                     errorMessage: "Invalid input"
         "401":
-          description: "If authentication has failed. Please make sure that a valid authentication token is provided."
+          description: "Authentication Failure. Please check your authentication token"
           content:
             application/json:
               schema:
@@ -409,7 +409,7 @@ paths:
                     errorCode: 2
                     errorMessage: "Authentication error"
         "403":
-          description: "If authentication was successful, but authorization has failed. Please make sure that a valid authentication token is provided."
+          description: "Authorization Failure. Please check your authentication token"
           content:
             application/json:
               schema:
@@ -421,7 +421,7 @@ paths:
                     errorCode: 3
                     errorMessage: "Authorization error"
         "500":
-          description: "System Error."
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -447,7 +447,7 @@ paths:
         $ref: "#/components/requestBodies/DepositCreationRequest"
       responses:
         "200":
-          description: "Deposit request has been processed by pawaPay."
+          description: "Request has been processed by pawaPay"
           content:
             application/json:
               schema:
@@ -471,7 +471,7 @@ paths:
                       rejectionCode: "AMOUNT_TOO_LARGE"
                       rejectionMessage: "Amount should not be greater than 1000"
         "400":
-          description: "If a <code>DepositCreationRequest</code> has been rejected due to incompatibility with pawaPay API specification."
+          description: "Request is rejected due to incompatibility with pawaPay API specification"
           content:
             application/json:
               schema:
@@ -483,7 +483,7 @@ paths:
                     errorCode: 1
                     errorMessage: "Invalid input: Missing required creator property 'amount'"
         "401":
-          description: "If authentication has failed. Please make sure that a valid authentication token is provided."
+          description: "Authentication Failure. Please check your authentication token"
           content:
             application/json:
               schema:
@@ -495,7 +495,7 @@ paths:
                     errorCode: 2
                     errorMessage: "Authentication error"
         "403":
-          description: "If authentication was successful, but authorization has failed. Please make sure that a valid authentication token is provided."
+          description: "Authorization Failure. Please check your authentication token"
           content:
             application/json:
               schema:
@@ -507,7 +507,7 @@ paths:
                     errorCode: 3
                     errorMessage: "Authorization error"
         "500":
-          description: "System Error."
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -530,7 +530,7 @@ paths:
         $ref: "#/components/requestBodies/BulkDepositCreationRequest"
       responses:
         "200":
-          description: "Bulk request has been processed by pawaPay."
+          description: "Request has been processed by pawaPay"
           content:
             application/json:
               schema:
@@ -552,7 +552,7 @@ paths:
                         rejectionCode: "AMOUNT_TOO_LARGE"
                         ejectionMessage: "Amount should not be greater than 1000"
         "400":
-          description: "If a <code>BulkDepositCreationRequest</code> has been rejected due to incompatibility with pawaPay API specification."
+          description: "Request is rejected due to incompatibility with pawaPay API specification"
           content:
             application/json:
               schema:
@@ -564,7 +564,7 @@ paths:
                     errorCode: 1
                     errorMessage: "Invalid input: Missing required creator property 'amount'"
         "401":
-          description: "If authentication has failed. Please make sure that a valid authentication token is provided."
+          description: "Authentication Failure. Please check your authentication token"
           content:
             application/json:
               schema:
@@ -576,7 +576,7 @@ paths:
                     errorCode: 2
                     errorMessage: "Authentication error"
         "403":
-          description: "If authentication was successful, but authorization has failed. Please make sure that a valid authentication token is provided."
+          description: "Authorization Failure. Please check your authentication token"
           content:
             application/json:
               schema:
@@ -588,7 +588,7 @@ paths:
                     errorCode: 3
                     errorMessage: "Authorization error"
         "500":
-          description: "System Error."
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -622,7 +622,7 @@ paths:
           maxLength: 36
       responses:
         "200":
-          description: "Request has been processed by pawaPay."
+          description: "Request has been processed by pawaPay"
           content:
             application/json:
               schema:
@@ -736,7 +736,7 @@ paths:
                   value:
                     []
         "500":
-          description: "System Error."
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
