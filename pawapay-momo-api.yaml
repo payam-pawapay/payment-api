@@ -20,7 +20,7 @@ info:
 
     # Payout (Disbursement)
     
-    In a payout flow you initiate a request to transfer money from your wallet to a user's wallet. In a payout flow, pawaPay receives your request and sends it to the proper mobile network operator in the destination country. Whenever the the mobile operator finalize your payout request, it will inform pawaPay and consequently pawaPay informs you of the result through a webhook callback. If you couldn't recieve the callback, you can always call our Payout Get API to get the latest status and details of a specific payout request. 
+    In a payout flow you initiate a request to transfer money from your wallet to a user's wallet. In a payout flow, pawaPay receives your request and sends it to the proper mobile network operator in the destination country. Whenever the  mobile operator finalizes your payout request, it will inform pawaPay and consequently pawaPay informs you of the result through a webhook callback. If you couldn't receive the callback, you can always call our Payout Get API to get the latest status and details of a specific payout request. 
     
     Your payout request can have one of the following statuses in pawaPay system:
     
@@ -106,7 +106,7 @@ paths:
       - "payouts"
       summary: "Mobile Money Disbursement Request"
       description: |
-        Submits a payout transaction request. Each request is identified by a unique payoutId for asynchronous processing. This API call is <em>idempotent</em> which means it is safe to sumbit a Payout Request with the same <code>payoutId</code> multiple times. In this case duplicates are ignored.
+        Submits a payout transaction request. Each request is identified by a unique payoutId for asynchronous processing. This API call is <em>idempotent</em> which means it is safe to submit a Payout Request with the same <code>payoutId</code> multiple times. In this case duplicates are ignored.
         
         Each request can become either ACCEPTED, REJECTED or DUPLICATE_IGNORED
         
@@ -197,8 +197,8 @@ paths:
       tags:
       - "payouts"
       summary: "Mobile Money Disbursement Request (Bulk)"
-      description: "Batch operation which can be used to submit multiple payout transactions for asynchronous processing. NB! Bulk requests with more than 100 PayoutCreationRequest-s can be rejected by pawaPay. This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>BulkPayoutCreationRequest</code>  with the same <code>payoutId</code> multiple times: duplicates are ignored with the corresponding <code>PayoutCreationStatus</code>.
-        \n\n<b>NB!</b> Since the request can be partially of fully rejected, an API user must check HTTP status code and analyze <code>PayoutCreationResponse</code> for each submitted <code>PayoutCreationRequest</code>."
+      description: "Batch operation which can be used to submit multiple payout transactions for asynchronous processing. NB! Bulk requests with more than 100 PayoutCreationRequest-s can be rejected by pawaPay. This API call is <em>idempotent</em>. That is, it is safe to submit a <code>BulkPayoutCreationRequest</code>  with the same <code>payoutId</code> multiple times: duplicates are ignored with the corresponding <code>PayoutCreationStatus</code>.
+        \n\n<b>NB!</b> Since the request can be partially or fully rejected, an API user must check HTTP status code and analyze <code>PayoutCreationResponse</code> for each submitted <code>PayoutCreationRequest</code>."
       operationId: "createPayouts"
       requestBody:
         $ref: "#/components/requestBodies/BulkPayoutCreationRequest"
@@ -238,7 +238,7 @@ paths:
                     errorCode: 1
                     errorMessage: "Invalid input: Missing required creator property 'amount'"
         "401":
-          description: "If authentication has failed. Please make sure that valid authentication token is provided."
+          description: "If authentication has failed. Please make sure that a valid authentication token is provided."
           content:
             application/json:
               schema:
@@ -250,7 +250,7 @@ paths:
                     errorCode: 2
                     errorMessage: "Authentication error"
         "403":
-          description: "If authentication was successful, but authorization has failed. Please make sure that valid authentication token is provided."
+          description: "If authentication was successful, but authorization has failed. Please make sure that a valid authentication token is provided."
           content:
             application/json:
               schema:
@@ -397,7 +397,7 @@ paths:
                     errorCode: 1
                     errorMessage: "Invalid input"
         "401":
-          description: "If authentication has failed. Please make sure that valid authentication token is provided."
+          description: "If authentication has failed. Please make sure that a valid authentication token is provided."
           content:
             application/json:
               schema:
@@ -409,7 +409,7 @@ paths:
                     errorCode: 2
                     errorMessage: "Authentication error"
         "403":
-          description: "If authentication was successful, but authorization has failed. Please make sure that valid authentication token is provided."
+          description: "If authentication was successful, but authorization has failed. Please make sure that a valid authentication token is provided."
           content:
             application/json:
               schema:
@@ -440,7 +440,7 @@ paths:
       tags:
       - "deposits"
       summary: "Mobile Money Collection Request"
-      description: "Submit a deposit transaction identified by a unique depositId for asynchronous processing (money collection from the payer). This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>DepositCreationRequest</code> with the same <code>depositId</code> multiple times: duplicates are ignored with the corresponding <code>DepositCreationStatus</code>.
+      description: "Submit a deposit transaction identified by a unique depositId for asynchronous processing (money collection from the payer). This API call is <em>idempotent</em>. That is, it is safe to submit a <code>DepositCreationRequest</code> with the same <code>depositId</code> multiple times: duplicates are ignored with the corresponding <code>DepositCreationStatus</code>.
         \n\n<b>NB!</b> Since the request can be rejected, an API user must check HTTP status code and <code>DepositCreationResponse</code>."
       operationId: "createDesposit"
       requestBody:
@@ -483,7 +483,7 @@ paths:
                     errorCode: 1
                     errorMessage: "Invalid input: Missing required creator property 'amount'"
         "401":
-          description: "If authentication has failed. Please make sure that valid authentication token is provided."
+          description: "If authentication has failed. Please make sure that a valid authentication token is provided."
           content:
             application/json:
               schema:
@@ -495,7 +495,7 @@ paths:
                     errorCode: 2
                     errorMessage: "Authentication error"
         "403":
-          description: "If authentication was successful, but authorization has failed. Please make sure that valid authentication token is provided."
+          description: "If authentication was successful, but authorization has failed. Please make sure that a valid authentication token is provided."
           content:
             application/json:
               schema:
@@ -523,8 +523,8 @@ paths:
       tags:
       - "deposits"
       summary: "Mobile Money Collection Request (Bulk)"
-      description: "Batch operation which can be used to submit multiple deposit transactions for asynchronous processing. NB! Bulk requests with more than 100 DepositCreationRequest-s can be rejected by pawaPay. This API call is <em>idempotent</em>. That is, it is safe to sumbit a <code>BulkDepositCreationRequest</code>  with the same <code>depositId</code> multiple times: duplicates are ignored with the corresponding <code>DepositeCreationStatus</code>.
-        \n\n<b>NB!</b> Since the request can be partially of fully rejected, an API user must check HTTP status code and analyze <code>DepositCreationResponse</code> for each submitted <code>DepositCreationRequest</code>."
+      description: "Batch operation which can be used to submit multiple deposit transactions for asynchronous processing. NB! Bulk requests with more than 100 DepositCreationRequest-s can be rejected by pawaPay. This API call is <em>idempotent</em>. That is, it is safe to submit a <code>BulkDepositCreationRequest</code>  with the same <code>depositId</code> multiple times: duplicates are ignored with the corresponding <code>DepositeCreationStatus</code>.
+        \n\n<b>NB!</b> Since the request can be partially or fully rejected, an API user must check HTTP status code and analyze <code>DepositCreationResponse</code> for each submitted <code>DepositCreationRequest</code>."
       operationId: "createDeposits"
       requestBody:
         $ref: "#/components/requestBodies/BulkDepositCreationRequest"
@@ -564,7 +564,7 @@ paths:
                     errorCode: 1
                     errorMessage: "Invalid input: Missing required creator property 'amount'"
         "401":
-          description: "If authentication has failed. Please make sure that valid authentication token is provided."
+          description: "If authentication has failed. Please make sure that a valid authentication token is provided."
           content:
             application/json:
               schema:
@@ -576,7 +576,7 @@ paths:
                     errorCode: 2
                     errorMessage: "Authentication error"
         "403":
-          description: "If authentication was successful, but authorization has failed. Please make sure that valid authentication token is provided."
+          description: "If authentication was successful, but authorization has failed. Please make sure that a valid authentication token is provided."
           content:
             application/json:
               schema:
