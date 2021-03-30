@@ -204,8 +204,7 @@ paths:
         $ref: "#/components/requestBodies/BulkPayoutCreationRequest"
       responses:
         "200":
-          description: "If a bulk request has been processed (but not necessarily accepted) by pawaPay.
-            \n\n<b>NB!</b> An API user must analyze <code>PayoutCreationStatus</code> for each submitted <code>PayoutCreationRequest</code> (<code>payoutId</code>) separately."
+          description: "Bulk request has been processed by pawaPay."
           content:
             application/json:
               schema:
@@ -294,7 +293,7 @@ paths:
           maxLength: 36
       responses:
         "200":
-          description: "If a request has been processed by pawaPay successfully."
+          description: "Request has been processed by pawaPay successfully."
           content:
             application/json:
               schema:
@@ -448,8 +447,7 @@ paths:
         $ref: "#/components/requestBodies/DepositCreationRequest"
       responses:
         "200":
-          description: "If a <code>DepositCreationRequest</code> has been processed (but not necessarily accepted) by pawaPay.
-            \n\n<b>NB!</b> An API user must analyze <code>DepositCreationStatus</code> to check whether payout request was <em>accepted</em>, <em>rejected</em> or <em>ignored</em> as a duplicate."
+          description: "Deposit request has been processed by pawaPay."
           content:
             application/json:
               schema:
@@ -532,8 +530,7 @@ paths:
         $ref: "#/components/requestBodies/BulkDepositCreationRequest"
       responses:
         "200":
-          description: "If a bulk request has been processed (but not necessarily accepted) by pawaPay.
-            \n\n<b>NB!</b> An API user must analyze <code>DepositCreationStatus</code> for each submitted <code>DepositCreationRequest</code> (<code>depositId</code>) separately."
+          description: "Bulk request has been processed by pawaPay."
           content:
             application/json:
               schema:
@@ -625,13 +622,13 @@ paths:
           maxLength: 36
       responses:
         "200":
-          description: "If a request has been processed by pawaPay successfully."
+          description: "Request has been processed by pawaPay."
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/DepositSearchResult"
               examples:
-                Completed deposit:
+                COMPLETED:
                   value:
                     - depositId: "8917c345-4791-4285-a416-62f24b6982db"
                       status: "COMPLETED"
@@ -650,7 +647,7 @@ paths:
                       respondedByPayer: "2020-10-19T08:17:02Z"
                       correspondentIds:
                         SOME_CORRESPONDENT_ID: "12356789"
-                COMPLETED:
+                COMPLETED (Discrepancy):
                   value:
                     - depositId: "8917c345-4791-4285-a416-62f24b6982db"
                       status: "COMPLETED"
