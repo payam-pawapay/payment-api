@@ -106,9 +106,13 @@ paths:
       - "payouts"
       summary: "Mobile Money Disbursement Request"
       description: |
-        Submits a payout transaction request. Each request is identified by a unique payoutId for asynchronous processing. This API call is <em>idempotent</em> which means it is safe to submit a Payout Request with the same <code>payoutId</code> multiple times. In this case duplicates are ignored.
+        Payouts operation allows you to submit a payout (disbursement) transaction request for asynchronous processing:
         
-        Each request can become either ACCEPTED, REJECTED or DUPLICATE_IGNORED
+        * This API call is <em>idempotent</em>, which means it is safe to submit a request with the same <code>payoutId</code> multiple times. 
+        * Duplicate requests with the same <code>payoutId</code> will be ignored with the `DUPLICATE_IGNORED` status in the <code>PayoutCreationResponse</code>.
+        * Since the request can be partially or fully rejected, you must check HTTP status code and analyze <code>PayoutCreationResponse</code> for each submitted request.
+        
+        Each request can become either ACCEPTED, REJECTED or DUPLICATE_IGNORED:
         
         Status | Description
         -------|------------
@@ -197,8 +201,23 @@ paths:
       tags:
       - "payouts"
       summary: "Mobile Money Disbursement Request (Bulk)"
-      description: "Batch operation which can be used to submit multiple payout transactions for asynchronous processing. NB! Bulk requests with more than 100 PayoutCreationRequest-s can be rejected by pawaPay. This API call is <em>idempotent</em>. That is, it is safe to submit a <code>BulkPayoutCreationRequest</code>  with the same <code>payoutId</code> multiple times: duplicates are ignored with the corresponding <code>PayoutCreationStatus</code>.
-        \n\n<b>NB!</b> Since the request can be partially or fully rejected, an API user must check HTTP status code and analyze <code>PayoutCreationResponse</code> for each submitted <code>PayoutCreationRequest</code>."
+      description: |
+        Bulk payouts operation allows you to submit multiple payout transactions for asynchronous processing:
+        
+        * Bulk requests with more than 20 payout transactions can be rejected by pawaPay. 
+        * This API call is <em>idempotent</em>, which means it is safe to submit a request with the same <code>payoutId</code> multiple times. 
+        * Duplicate requests with the same <code>payoutId</code> will be ignored with the `DUPLICATE_IGNORED` status in the <code>PayoutCreationResponse</code>.
+        * Since the request can be partially or fully rejected, you must check HTTP status code and analyze <code>PayoutCreationResponse</code> for each submitted request.
+
+        Every single transaction in a bulk request can become either ACCEPTED, REJECTED or DUPLICATE_IGNORED:
+        
+        Status | Description
+        -------|------------
+        `ACCEPTED` | The payout creation request has been accepted.
+        `REJECTED` | The payout creation request has been rejected. See `rejectionReason` for details.
+        `DUPLICATE_IGNORED` | The payout creation request has been ignored as a duplicate of an already accepted payout request. Duplication logic relies upon payoutId.
+
+
       operationId: "createPayouts"
       requestBody:
         $ref: "#/components/requestBodies/BulkPayoutCreationRequest"
@@ -278,7 +297,7 @@ paths:
       tags:
       - "payouts"
       summary: "Get Payout Status and Details"
-      description: "Get payout transaction status and payout details by payoutId which has been specified in PayoutCreationRequest. A list with at most one <code>Payout</code> is returned."
+      description: "Get payout transaction status and payout details by the `payoutId` that you have specified in your payout request. A list with at most one <code>Payout</code> is returned."
       operationId: "getPayout"
       parameters:
       - name: "payoutId"
@@ -440,8 +459,21 @@ paths:
       tags:
       - "deposits"
       summary: "Mobile Money Collection Request"
-      description: "Submit a deposit transaction identified by a unique depositId for asynchronous processing (money collection from the payer). This API call is <em>idempotent</em>. That is, it is safe to submit a <code>DepositCreationRequest</code> with the same <code>depositId</code> multiple times: duplicates are ignored with the corresponding <code>DepositCreationStatus</code>.
-        \n\n<b>NB!</b> Since the request can be rejected, an API user must check HTTP status code and <code>DepositCreationResponse</code>."
+      description: |
+        Deposits operation allows you to submit a deposit (collection) transaction request for asynchronous processing:
+        
+        * This API call is <em>idempotent</em>, which means it is safe to submit a request with the same `depositId` multiple times. 
+        * Duplicate requests with the same `depositId` will be ignored with the `DUPLICATE_IGNORED` status in the <code>DepositCreationResponse</code>.
+        * Since the request can be partially or fully rejected, you must check HTTP status code and analyze <code>DepositCreationResponse</code> for each submitted request.
+        
+        Each request can become either ACCEPTED, REJECTED or DUPLICATE_IGNORED:
+        
+        Status | Description
+        -------|------------
+        `ACCEPTED` | The deposit creation request has been accepted.
+        `REJECTED` | The deposit creation request has been rejected. See `rejectionReason` for details.
+        `DUPLICATE_IGNORED` | The deposit creation request has been ignored as a duplicate of an already accepted deposit request. Duplication logic relies upon depositId.
+      
       operationId: "createDesposit"
       requestBody:
         $ref: "#/components/requestBodies/DepositCreationRequest"
@@ -523,8 +555,22 @@ paths:
       tags:
       - "deposits"
       summary: "Mobile Money Collection Request (Bulk)"
-      description: "Batch operation which can be used to submit multiple deposit transactions for asynchronous processing. NB! Bulk requests with more than 100 DepositCreationRequest-s can be rejected by pawaPay. This API call is <em>idempotent</em>. That is, it is safe to submit a <code>BulkDepositCreationRequest</code>  with the same <code>depositId</code> multiple times: duplicates are ignored with the corresponding <code>DepositeCreationStatus</code>.
-        \n\n<b>NB!</b> Since the request can be partially or fully rejected, an API user must check HTTP status code and analyze <code>DepositCreationResponse</code> for each submitted <code>DepositCreationRequest</code>."
+      description: |
+        Bulk deposits operation allows you to submit multiple deposit transactions for asynchronous processing:
+        
+        * Bulk requests with more than 20 deposit transactions can be rejected by pawaPay. 
+        * This API call is <em>idempotent</em>, which means it is safe to submit a request with the same <code>depositId</code> multiple times. 
+        * Duplicate requests with the same <code>depositId</code> will be ignored with the `DUPLICATE_IGNORED` status in the <code>DepositCreationResponse</code>.
+        * Since the request can be partially or fully rejected, you must check HTTP status code and analyze <code>DepositCreationResponse</code> for each submitted request.
+
+        Every single transaction in a bulk request can become either ACCEPTED, REJECTED or DUPLICATE_IGNORED:
+        
+        Status | Description
+        -------|------------
+        `ACCEPTED` | The deposit creation request has been accepted.
+        `REJECTED` | The deposit creation request has been rejected. See `rejectionReason` for details.
+        `DUPLICATE_IGNORED` | The deposit creation request has been ignored as a duplicate of an already accepted deposit request. Duplication logic relies upon depositId.
+
       operationId: "createDeposits"
       requestBody:
         $ref: "#/components/requestBodies/BulkDepositCreationRequest"
@@ -607,7 +653,7 @@ paths:
       tags:
       - "deposits"
       summary: "Get Deposit Status and Details"
-      description: "Get deposit transaction status and deposit details by depositId which has been specified in DepositCreationRequest."
+      description: "Get deposit transaction status and deposit details by `depositId` which has been specified in DepositCreationRequest. A list with at most one `Deposit` is returned."
       operationId: "getDeposit"
       parameters:
       - name: "depositId"
@@ -1321,6 +1367,7 @@ x-webhooks:
       tags:
       - "payouts"
       summary: "Payout Status Notification Callback"
+      description: "For every payout request pawaPay will inform you of the transaction result through a webhook callback. If you couldn't receive the callback you can always call our Payout Get API to get the latest status and details of a specific payout request. "
       operationId: payoutWebhook
       requestBody:
         content:
@@ -1336,6 +1383,7 @@ x-webhooks:
     post:
       tags:
       - "deposits"
+      description: "For every deposit request pawaPay will inform you of the transaction result through a webhook callback. If you couldn't receive the callback you can always call our Deposit Get API to get the latest status and details of a specific deposit request. "
       summary: "Deposit Status Notification Callback"
       operationId: depositWebhook
       requestBody:
